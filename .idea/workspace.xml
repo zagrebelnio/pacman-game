@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Added Pacman, player movement and wall collisions.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,8 +67,17 @@
       <workItem from="1684084973170" duration="7000" />
       <workItem from="1684152675309" duration="123000" />
       <workItem from="1684174276152" duration="3576000" />
-      <workItem from="1684178217608" duration="434000" />
+      <workItem from="1684178217608" duration="2942000" />
+      <workItem from="1684181322560" duration="1376000" />
     </task>
+    <task id="LOCAL-00001" summary="Added Pacman, player movement and wall collisions.">
+      <created>1684178755102</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1684178755102</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,7 +94,11 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Pacman, player movement and wall collisions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Pacman, player movement and wall collisions." />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1684178623433" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1684182236357" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
