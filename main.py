@@ -1,45 +1,8 @@
-import pygame
 from pygame.locals import *
-from constants import *
+from pacman import *
+from food import *
+from block import *
 
-class Pacman:
-    def __init__(self):
-        self.x = PACMAN_START_X
-        self.y = PACMAN_START_Y
-        self.radius = GRID_SIZE / 2
-        self.direction = "right"
-    def move(self, dt):
-        if self.x < 0 - self.radius:
-            self.x = SCREEN_WIDTH + self.radius
-        elif self.x > SCREEN_WIDTH + self.radius:
-            self.x = 0 - self.radius
-        if self.direction == "right":
-            self.x += PACMAN_SPEED * dt
-        elif self.direction == "left":
-            self.x -= PACMAN_SPEED * dt
-        elif self.direction == "up":
-            self.y -= PACMAN_SPEED * dt
-        elif self.direction == "down":
-            self.y += PACMAN_SPEED * dt
-    def can_turn(self, direction): #detects wether pacman can move in the specific direction
-        current_pos = [int(self.y // GRID_SIZE), int(self.x // GRID_SIZE)]
-        if current_pos[1] <= 0 or current_pos[1] >= COLS - 1:
-            if self.direction == "left" and direction == "right":
-                return True
-            elif self.direction == "right" and direction == "left":
-                return True
-        else:
-            if direction == "left" and self.direction != "left" and GAME_FIELD[current_pos[0]][current_pos[1] - 1] == 0 and current_pos[0] * GRID_SIZE + self.radius - 2 <= self.y <= (current_pos[0] + 1) * GRID_SIZE - self.radius + 2:
-                return True
-            elif direction == "right" and self.direction != "right" and GAME_FIELD[current_pos[0]][current_pos[1] + 1] == 0 and current_pos[0] * GRID_SIZE + self.radius - 2 <= self.y <= (current_pos[0] + 1) * GRID_SIZE - self.radius + 2:
-                return True
-            elif direction == "up" and self.direction != "up" and GAME_FIELD[current_pos[0] - 1][current_pos[1]] == 0 and current_pos[1] * GRID_SIZE + self.radius - 2 <= self.x <= (current_pos[1] + 1) * GRID_SIZE - self.radius + 2:
-                return True
-            elif direction == "down" and self.direction != "down" and GAME_FIELD[current_pos[0] + 1][current_pos[1]] == 0 and current_pos[1] * GRID_SIZE + self.radius - 2 <= self.x <= (current_pos[1] + 1) * GRID_SIZE - self.radius + 2:
-                return True
-        return False
-    def draw(self):
-        pygame.draw.circle(screen, "yellow", (self.x, self.y), self.radius, PACMAN_SIZE)
 def draw_grid():
     for y in range(ROWS):
         for x in range(COLS):
@@ -60,11 +23,10 @@ pacman = Pacman()
 
 clock = pygame.time.Clock()
 
-blocks_rect = []
-for y in range(ROWS):
-    for x in range(COLS):
-        if GAME_FIELD[y][x] == 1:
-            blocks_rect.append([x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE])
+food = Food()
+food.reset()
+block = Block()
+block.reset()
 
 game_over = False
 
@@ -91,21 +53,13 @@ while not game_over:
     screen.fill(BACKGROUND_COLOR)
     draw_grid()
     draw_field()
-    pacman.draw()
-    #pacman-block collisions
-    for block in blocks_rect:
-        #right collision
-        if pacman.direction == "right" and block[0] - pacman.radius <= pacman.x <= block[0] + block[2] - pacman.radius and block[1] <= pacman.y <= block[1] + block[3]:
-            pacman.x = block[0] - pacman.radius
-        #left collision
-        if pacman.direction == "left" and block[0] + pacman.radius <= pacman.x <= block[0] + block[2] + pacman.radius and block[1] <= pacman.y <= block[1] + block[3]:
-            pacman.x = block[0] + block[2] + pacman.radius
-        #top collision
-        if pacman.direction == "up" and block[0] <= pacman.x <= block[0] + block[2] and block[1] + pacman.radius <= pacman.y <= block[1] + block[3] + pacman.radius:
-            pacman.y = block[1] + block[2] + pacman.radius
-        #bottom collision
-        if pacman.direction == "down" and block[0] <= pacman.x <= block[0] + block[2] and block[1] - pacman.radius <= pacman.y <= block[1] + block[3] - pacman.radius:
-            pacman.y = block[1] - pacman.radius
+    food.draw(screen)
+    food.eat(pacman)
+    block.check_wall_collisions(pacman)
+    pacman.draw(screen)
+
+    if food.cords == []:
+        game_over = True
 
     pacman.move(dt)
     pygame.display.update()
