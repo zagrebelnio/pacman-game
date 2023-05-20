@@ -1,25 +1,8 @@
-ROWS = 21
-COLS = 21
+import pygame
 
-GRID_SIZE = 30
-
-SCREEN_WIDTH = GRID_SIZE * COLS
-SCREEN_HEIGHT = GRID_SIZE * ROWS
-
-FPS = 60
-
-BACKGROUND_COLOR = (0, 0, 0)
-GRID_COLOR = (100, 100, 100)
-WALL_COLOR = (0, 0, 204)
-
-PACMAN_SIZE = 30
-PACMAN_START_X = 10 * GRID_SIZE + GRID_SIZE / 2
-PACMAN_START_Y = 15 * GRID_SIZE + GRID_SIZE / 2
-PACMAN_SPEED = 0.1
-
-FOOD_SIZE = GRID_SIZE // 5
-
-GAME_FIELD = [[-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1],
+class GameField:
+    def __init__(self):
+        self.matrix = [[-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1],
               [-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1],
               [-1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, -1],
               [-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1],
@@ -27,7 +10,7 @@ GAME_FIELD = [[-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1],
               [-1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, -1],
               [-1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, -1],
               [-1, -1, -1, -1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, -1, -1, -1, -1],
-              [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, -1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
               [0, 0, 0, 0, 0, 0, 0, 0, 1, -1, -1, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
               [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
               [-1, -1, -1, -1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, -1, -1, -1, -1],
@@ -40,3 +23,22 @@ GAME_FIELD = [[-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1],
               [-1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, -1],
               [-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1],
               [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1]]
+        self.rows = 21
+        self.cols = 21
+        self.grid_size = 30
+        self.background_color = (0, 0, 0)
+        self.grid_color = (100, 100, 100)
+        self.wall_color = (0, 0, 204)
+
+    def draw(self, screen):
+        for y in range(self.rows):
+            for x in range(self.cols):
+                if self.matrix[y][x] == 1:
+                    pygame.draw.rect(screen.window, self.wall_color,
+                                     [x * self.grid_size + 1, y * self.grid_size + 1, self.grid_size - 2, self.grid_size - 2])
+
+    def drawGrid(self, screen):
+        for y in range(self.rows):
+            for x in range(self.cols):
+                pygame.draw.rect(screen.window, self.grid_color,
+                         [x * self.grid_size, y * self.grid_size, self.grid_size, self.grid_size], 1)

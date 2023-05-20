@@ -1,37 +1,31 @@
 from pygame.locals import *
+from gamefield import *
+from screen import *
 from pacman import *
 from food import *
 from block import *
-
-def draw_grid():
-    for y in range(ROWS):
-        for x in range(COLS):
-            pygame.draw.rect(screen, GRID_COLOR, [x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE], 1)
-
-def draw_field():
-    for y in range(ROWS):
-        for x in range(COLS):
-            if GAME_FIELD[y][x] == 1:
-                pygame.draw.rect(screen, WALL_COLOR, [x * GRID_SIZE + 1, y * GRID_SIZE + 1, GRID_SIZE - 2, GRID_SIZE - 2])
+from ghost import *
 
 pygame.init()
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+game_field = GameField()
+screen = Screen(game_field)
 pygame.display.set_caption("Pacman")
 
-pacman = Pacman()
+pacman = Pacman(game_field)
 
 clock = pygame.time.Clock()
 
-food = Food()
-food.reset()
+food = Food(game_field)
+food.reset(game_field)
 block = Block()
-block.reset()
+block.reset(game_field)
+ghost = Ghost(game_field)
 
 game_over = False
 
 while not game_over:
-    dt = clock.tick(FPS)
+    dt = clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
@@ -39,29 +33,33 @@ while not game_over:
             game_over = True
     pressed = pygame.key.get_pressed()
     if pressed[K_LEFT]:
-        if pacman.can_turn("left"):
+        if pacman.can_turn("left", game_field):
             pacman.direction = "left"
     if pressed[K_RIGHT]:
-        if pacman.can_turn("right"):
+        if pacman.can_turn("right", game_field):
             pacman.direction = "right"
     if pressed[K_UP]:
-        if pacman.can_turn("up"):
+        if pacman.can_turn("up", game_field):
             pacman.direction = "up"
     if pressed[K_DOWN]:
-        if pacman.can_turn("down"):
+        if pacman.can_turn("down", game_field):
             pacman.direction = "down"
-    screen.fill(BACKGROUND_COLOR)
-    draw_grid()
-    draw_field()
+    screen.fill()
+    game_field.draw(screen)
+    game_field.drawGrid(screen)
     food.draw(screen)
     food.eat(pacman)
     block.check_wall_collisions(pacman)
     pacman.draw(screen)
+    pacman.check_cell(game_field)
+    ghost.draw(screen)
+    ghost.choose_target(pacman)
+    ghost.move(dt)
 
     if food.cords == []:
         game_over = True
 
-    pacman.move(dt)
+    pacman.move(dt, screen)
     pygame.display.update()
 
 pygame.quit()

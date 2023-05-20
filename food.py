@@ -1,20 +1,21 @@
 import pygame
-from constants import *
 
 class Food:
-    def __init__(self):
+    def __init__(self, game_field):
         self.cords = []
-        self.radius = FOOD_SIZE / 2
+        self.size = game_field.grid_size // 5
+        self.radius = self.size / 2
+        self.color = "white"
 
-    def reset(self):
-        for y in range(ROWS):
-            for x in range(COLS):
-                if GAME_FIELD[y][x] == 0:
-                    self.cords.append(((x * GRID_SIZE) + GRID_SIZE / 2, (y * GRID_SIZE) + GRID_SIZE / 2))
+    def reset(self, game_field):
+        for y in range(game_field.rows):
+            for x in range(game_field.cols):
+                if game_field.matrix[y][x] == 0:
+                    self.cords.append(((x * game_field.grid_size) + game_field.grid_size / 2, (y * game_field.grid_size) + game_field.grid_size / 2))
 
     def draw(self, screen):
         for cord in self.cords:
-            pygame.draw.circle(screen, "white", cord, self.radius, FOOD_SIZE)
+            pygame.draw.circle(screen.window, self.color, cord, self.radius, self.size)
 
     def eat(self, pacman):
         for i in range(len(self.cords)):

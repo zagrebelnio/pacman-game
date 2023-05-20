@@ -1,13 +1,12 @@
-from constants import *
 
 class Block:
     def __init__(self):
         self.rect = []
-    def reset(self):
-        for y in range(ROWS):
-            for x in range(COLS):
-                if GAME_FIELD[y][x] == 1:
-                    self.rect.append([x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE])
+    def reset(self, game_field):
+        for y in range(game_field.rows):
+            for x in range(game_field.cols):
+                if game_field.matrix[y][x] == 1:
+                    self.rect.append([x * game_field.grid_size, y * game_field.grid_size, game_field.grid_size, game_field.grid_size])
     def check_wall_collisions(self, pacman):
         # pacman-block collisions
         for block in self.rect:
