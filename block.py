@@ -1,28 +1,28 @@
 
 class Block:
     def __init__(self):
-        self.rect = []
+        self.__rect = []
     def reset(self, game_field):
-        for y in range(game_field.rows):
-            for x in range(game_field.cols):
-                if game_field.matrix[y][x] == 1:
-                    self.rect.append([x * game_field.grid_size, y * game_field.grid_size, game_field.grid_size, game_field.grid_size])
-    def check_wall_collisions(self, pacman):
+        for y in range(game_field.getRows()):
+            for x in range(game_field.getCols()):
+                if game_field.getMatrix()[y][x] == 1:
+                    self.__rect.append([x * game_field.getGridSize(), y * game_field.getGridSize(), game_field.getGridSize(), game_field.getGridSize()])
+    def check_wall_collisions(self, entity):
         # pacman-block collisions
-        for block in self.rect:
+        for block in self.__rect:
             # right collision
-            if pacman.direction == "right" and block[0] - pacman.radius <= pacman.x <= block[0] + block[
-                2] - pacman.radius and block[1] <= pacman.y <= block[1] + block[3]:
-                pacman.x = block[0] - pacman.radius
+            if entity.getDirection() == "right" and block[0] - entity.getRadius() <= entity.getX() <= block[0] + block[
+                2] - entity.getRadius() and block[1] <= entity.getY() <= block[1] + block[3]:
+                entity.setX(block[0] - entity.getRadius())
             # left collision
-            if pacman.direction == "left" and block[0] + pacman.radius <= pacman.x <= block[0] + block[
-                2] + pacman.radius and block[1] <= pacman.y <= block[1] + block[3]:
-                pacman.x = block[0] + block[2] + pacman.radius
+            if entity.getDirection() == "left" and block[0] + entity.getRadius() <= entity.getX() <= block[0] + block[
+                2] + entity.getRadius() and block[1] <= entity.getY() <= block[1] + block[3]:
+                entity.setX(block[0] + block[2] + entity.getRadius())
             # top collision
-            if pacman.direction == "up" and block[0] <= pacman.x <= block[0] + block[2] and block[
-                1] + pacman.radius <= pacman.y <= block[1] + block[3] + pacman.radius:
-                pacman.y = block[1] + block[2] + pacman.radius
+            if entity.getDirection() == "up" and block[0] <= entity.getX() <= block[0] + block[2] and block[
+                1] + entity.getRadius() <= entity.getY() <= block[1] + block[3] + entity.getRadius():
+                entity.setY(block[1] + block[2] + entity.getRadius())
             # bottom collision
-            if pacman.direction == "down" and block[0] <= pacman.x <= block[0] + block[2] and block[
-                1] - pacman.radius <= pacman.y <= block[1] + block[3] - pacman.radius:
-                pacman.y = block[1] - pacman.radius
+            if entity.getDirection() == "down" and block[0] <= entity.getX() <= block[0] + block[2] and block[
+                1] - entity.getRadius() <= entity.getY() <= block[1] + block[3] - entity.getRadius():
+                entity.setY(block[1] - entity.getRadius())

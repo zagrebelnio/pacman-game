@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Transferred game field and screen to classes.">
+    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Added ghost that haunts pacman.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/block.py" beforeDir="false" afterPath="$PROJECT_DIR$/block.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/food.py" beforeDir="false" afterPath="$PROJECT_DIR$/food.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gamefield.py" beforeDir="false" afterPath="$PROJECT_DIR$/gamefield.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pacman.py" beforeDir="false" afterPath="$PROJECT_DIR$/pacman.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/screen.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +99,8 @@
       <workItem from="1684666252979" duration="11000" />
       <workItem from="1684913613406" duration="3369000" />
       <workItem from="1684918110484" duration="111000" />
-      <workItem from="1684918239926" duration="3893000" />
+      <workItem from="1684918239926" duration="4504000" />
+      <workItem from="1684935016104" duration="3959000" />
     </task>
     <task id="LOCAL-00001" summary="Added Pacman, player movement and wall collisions.">
       <created>1684178755102</created>
@@ -124,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684595487436</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added ghost that haunts pacman.">
+      <created>1684922184700</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684922184700</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,9 +159,10 @@
     <MESSAGE value="Fixed pacman movement, added tunnel crossing." />
     <MESSAGE value="Added spawning and eating food, blocks transferred to class." />
     <MESSAGE value="Transferred game field and screen to classes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Transferred game field and screen to classes." />
+    <MESSAGE value="Added ghost that haunts pacman." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added ghost that haunts pacman." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1684921786565" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1684938937930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

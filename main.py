@@ -34,16 +34,16 @@ while not game_over:
     pressed = pygame.key.get_pressed()
     if pressed[K_LEFT]:
         if pacman.can_turn("left", game_field):
-            pacman.direction = "left"
+            pacman.setDirection("left")
     if pressed[K_RIGHT]:
         if pacman.can_turn("right", game_field):
-            pacman.direction = "right"
+            pacman.setDirection("right")
     if pressed[K_UP]:
         if pacman.can_turn("up", game_field):
-            pacman.direction = "up"
+            pacman.setDirection("up")
     if pressed[K_DOWN]:
         if pacman.can_turn("down", game_field):
-            pacman.direction = "down"
+            pacman.setDirection("down")
     screen.fill()
     game_field.draw(screen)
     game_field.drawGrid(screen)
@@ -52,14 +52,14 @@ while not game_over:
     block.check_wall_collisions(pacman)
     block.check_wall_collisions(ghost)
     pacman.draw(screen)
-    pacman.check_cell(game_field)
+    pacman.setCell(game_field)
     ghost.draw(screen)
     ghost.setTarget(pacman)
     ghost.changeDirection(game_field)
     ghost.move(dt, screen)
-    ghost.check_cell(game_field)
+    ghost.setCell(game_field)
 
-    if food.cords == []:
+    if food.getCords() == []:
         game_over = True
 
     pacman.move(dt, screen)

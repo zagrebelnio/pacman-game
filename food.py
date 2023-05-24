@@ -2,23 +2,27 @@ import pygame
 
 class Food:
     def __init__(self, game_field):
-        self.cords = []
-        self.size = game_field.grid_size // 5
-        self.radius = self.size / 2
-        self.color = "white"
+        self.__cords = []
+        self.__size = game_field.getGridSize() // 5
+        self.__radius = self.__size / 2
+        self.__color = "white"
+
+    def getCords(self):
+        return self.__cords
+
 
     def reset(self, game_field):
-        for y in range(game_field.rows):
-            for x in range(game_field.cols):
-                if game_field.matrix[y][x] == 0:
-                    self.cords.append(((x * game_field.grid_size) + game_field.grid_size / 2, (y * game_field.grid_size) + game_field.grid_size / 2))
+        for y in range(game_field.getRows()):
+            for x in range(game_field.getCols()):
+                if game_field.getMatrix()[y][x] == 0:
+                    self.__cords.append(((x * game_field.getGridSize()) + game_field.getGridSize() / 2, (y * game_field.getGridSize()) + game_field.getGridSize() / 2))
 
     def draw(self, screen):
-        for cord in self.cords:
-            pygame.draw.circle(screen.window, self.color, cord, self.radius, self.size)
+        for cord in self.__cords:
+            pygame.draw.circle(screen.getWindow(), self.__color, cord, self.__radius, self.__size)
 
     def eat(self, pacman):
-        for i in range(len(self.cords)):
-            if self.cords[i][0] - pacman.radius + self.radius <= pacman.x <= self.cords[i][0] + pacman.radius - self.radius and self.cords[i][1] - pacman.radius + self.radius <= pacman.y <= self.cords[i][1] + pacman.radius - self.radius:
-                self.cords.pop(i)
+        for i in range(len(self.__cords)):
+            if self.__cords[i][0] - pacman.getRadius() + self.__radius <= pacman.getX() <= self.__cords[i][0] + pacman.getRadius() - self.__radius and self.__cords[i][1] - pacman.getRadius() + self.__radius <= pacman.getY() <= self.__cords[i][1] + pacman.getRadius() - self.__radius:
+                self.__cords.pop(i)
                 break
