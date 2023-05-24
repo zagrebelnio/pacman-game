@@ -50,11 +50,14 @@ while not game_over:
     food.draw(screen)
     food.eat(pacman)
     block.check_wall_collisions(pacman)
+    block.check_wall_collisions(ghost)
     pacman.draw(screen)
     pacman.check_cell(game_field)
     ghost.draw(screen)
-    ghost.choose_target(pacman)
-    ghost.move(dt)
+    ghost.setTarget(pacman)
+    ghost.changeDirection(game_field)
+    ghost.move(dt, screen)
+    ghost.check_cell(game_field)
 
     if food.cords == []:
         game_over = True
