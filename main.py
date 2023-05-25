@@ -18,9 +18,12 @@ clock = pygame.time.Clock()
 
 food = Food(game_field)
 food.reset(game_field)
+bonus = Bonus(game_field)
+bonus.reset(game_field)
 block = Block()
 block.reset(game_field)
 ghost = Ghost(game_field)
+ghost_guardian = GhostGuardian(game_field)
 
 game_over = False
 
@@ -49,8 +52,11 @@ while not game_over:
     game_field.drawGrid(screen)
     food.draw(screen)
     food.eat(pacman)
+    bonus.draw(screen)
+    bonus.eat(pacman)
     block.check_wall_collisions(pacman)
     block.check_wall_collisions(ghost)
+    block.check_wall_collisions(ghost_guardian)
     pacman.draw(screen)
     pacman.setCell(game_field)
     ghost.draw(screen)
@@ -58,8 +64,26 @@ while not game_over:
     ghost.changeDirection(game_field)
     ghost.move(dt, screen)
     ghost.setCell(game_field)
+    ghost_guardian.draw(screen)
+    ghost_guardian.setBonusTarget(bonus)
+    ghost_guardian.setTarget(bonus, game_field)
+    ghost_guardian.changeDirection(game_field)
+    ghost_guardian.move(dt, screen)
+    ghost_guardian.setCell(game_field)
+    if ghost.pacmanCollision(pacman):
+        if pacman.getLifes() == 0:
+            game_over = True
+        pacman.decrementLifes()
+        ghost.reset(game_field)
+        pacman.reset(game_field)
+    if ghost_guardian.pacmanCollision(pacman):
+        if pacman.getLifes() == 0:
+            game_over = True
+        pacman.decrementLifes()
+        ghost_guardian.reset(game_field)
+        pacman.reset(game_field)
 
-    if food.getCords() == []:
+    if food.getCords() == [] and bonus.getCords() == []:
         game_over = True
 
     pacman.move(dt, screen)

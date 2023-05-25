@@ -10,6 +10,7 @@ class Pacman:
         self.__cell = [int(self.__y // game_field.getGridSize()), int(self.__x // game_field.getGridSize())]
         self.__speed = 0.1
         self.__color = "yellow"
+        self.__lifes = 3
 
     def setX(self, x):
         self.__x = x
@@ -44,6 +45,17 @@ class Pacman:
     def getSpeed(self):
         return self.__speed
 
+    def getLifes(self):
+        return self.__lifes
+
+    def decrementLifes(self):
+        self.__lifes -= 1
+
+    def reset(self, game_field):
+        self.__x = 10 * game_field.getGridSize() + game_field.getGridSize() / 2
+        self.__y = 15 * game_field.getGridSize() + game_field.getGridSize() / 2
+        self.__direction = "right"
+
     def move(self, dt, screen):
         if self.__x < 0 - self.__radius:
             self.__x = screen.getWidth() + self.__radius
@@ -65,13 +77,13 @@ class Pacman:
             elif self.__direction == "right" and direction == "left":
                 return True
         else:
-            if direction == "left" and self.__direction != "left" and game_field.getMatrix()[self.__cell[0]][self.__cell[1] - 1] == 0 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
+            if direction == "left" and self.__direction != "left" and game_field.getMatrix()[self.__cell[0]][self.__cell[1] - 1] != 1 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
-            elif direction == "right" and self.__direction != "right" and game_field.getMatrix()[self.__cell[0]][self.__cell[1] + 1] == 0 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
+            elif direction == "right" and self.__direction != "right" and game_field.getMatrix()[self.__cell[0]][self.__cell[1] + 1] != 1 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
-            elif direction == "up" and self.__direction != "up" and game_field.getMatrix()[self.__cell[0] - 1][self.__cell[1]] == 0 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
+            elif direction == "up" and self.__direction != "up" and game_field.getMatrix()[self.__cell[0] - 1][self.__cell[1]] != 1 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
-            elif direction == "down" and self.__direction != "down" and game_field.getMatrix()[self.__cell[0] + 1][self.__cell[1]] == 0 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
+            elif direction == "down" and self.__direction != "down" and game_field.getMatrix()[self.__cell[0] + 1][self.__cell[1]] != 1 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
         return False
     def draw(self, screen):
