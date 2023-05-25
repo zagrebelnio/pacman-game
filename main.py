@@ -24,6 +24,8 @@ block = Block()
 block.reset(game_field)
 ghost = Ghost(game_field)
 ghost_guardian = GhostGuardian(game_field)
+ghost_patrol = GhostPatrol(game_field)
+ghost_patrol.setPatrolAreaTarget(game_field)
 
 game_over = False
 
@@ -70,17 +72,34 @@ while not game_over:
     ghost_guardian.changeDirection(game_field)
     ghost_guardian.move(dt, screen)
     ghost_guardian.setCell(game_field)
+    ghost_patrol.draw(screen)
+    ghost_patrol.setTarget(game_field)
+    ghost_patrol.changeDirection(game_field)
+    ghost_patrol.move(dt, screen)
+    ghost_patrol.setCell(game_field)
     if ghost.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
         pacman.decrementLifes()
         ghost.reset(game_field)
+        ghost_guardian.reset(game_field)
+        ghost_patrol.reset(game_field)
         pacman.reset(game_field)
-    if ghost_guardian.pacmanCollision(pacman):
+    elif ghost_guardian.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
         pacman.decrementLifes()
+        ghost.reset(game_field)
         ghost_guardian.reset(game_field)
+        ghost_patrol.reset(game_field)
+        pacman.reset(game_field)
+    elif ghost_patrol.pacmanCollision(pacman):
+        if pacman.getLifes() == 0:
+            game_over = True
+        pacman.decrementLifes()
+        ghost.reset(game_field)
+        ghost_guardian.reset(game_field)
+        ghost_patrol.reset(game_field)
         pacman.reset(game_field)
 
     if food.getCords() == [] and bonus.getCords() == []:

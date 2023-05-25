@@ -202,7 +202,6 @@ class GhostGuardian(Ghost):
             if self._bonus_target == bonus_cords:
                 return None
         self._bonus_target = random.choice(bonus.getCords())
-        print("bonus target reset")
 
     def getX(self):
         return super().getX()
@@ -234,6 +233,90 @@ class GhostGuardian(Ghost):
     def setTarget(self, bonus, game_field):
         if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
             self._target_cell = [self._bonus_target[1] // game_field.getGridSize(), self._bonus_target[0] // game_field.getGridSize()]
+        else:
+            self._target_cell = [10, 7]
+    def move(self, dt, screen):
+        super().move(dt, screen)
+
+    def checkNeighbourCells(self, game_field):
+        super().checkNeighbourCells(game_field)
+
+    def getNeighbourCell(self, direction):
+        return super().getNeighbourCell(direction)
+
+    def makeChoice(self, directions):
+        return super().makeChoice(directions)
+
+    def turn(self, next_direction, game_field):
+        super().turn(next_direction, game_field)
+    def changeDirection(self, game_field):
+        super().changeDirection(game_field)
+
+    def pacmanCollision(self, pacman):
+        return super().pacmanCollision(pacman)
+
+class GhostPatrol(Ghost):
+
+    def __init__(self, game_field):
+        super().__init__(game_field)
+        self._color = "cyan"
+        self._possible_areas = [[3, 7, 5, 15], [11, 15, 5, 15]]
+        self._patrol_area = random.choice(self._possible_areas)
+        self._patrol_area_target = []
+
+    def setX(self, x):
+        super().setX(x)
+
+    def setY(self, y):
+        super().setY(y)
+
+    def setDirection(self, direction):
+        super().setDirection(direction)
+
+    def setCell(self, game_field):
+        super().setCell(game_field)
+        if self._cell == self._target_cell:
+            self.setPatrolAreaTarget(game_field)
+
+    def setPatrolAreaTarget(self, game_field):
+        target = [random.randint(self._patrol_area[0], self._patrol_area[1]),
+                  random.randint(self._patrol_area[2], self._patrol_area[3])]
+        if game_field.getMatrix()[target[0]][target[1]] != 1:
+            self._patrol_area_target = target
+            print(target)
+        else:
+            self.setTarget(game_field)
+
+    def getX(self):
+        return super().getX()
+
+    def getY(self):
+        return super().getY()
+
+    def getRadius(self):
+        return super().getRadius()
+
+    def getSize(self):
+        return super().getSize()
+
+    def getDirection(self):
+        return super().getDirection()
+
+    def getCell(self):
+        return super().getCell()
+
+    def getSpeed(self):
+        return super().getSpeed()
+
+    def draw(self, screen):
+        super().draw(screen)
+
+    def reset(self, game_field):
+        super().reset(game_field)
+
+    def setTarget(self, game_field):
+        if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
+            self._target_cell = self._patrol_area_target
         else:
             self._target_cell = [10, 7]
     def move(self, dt, screen):
