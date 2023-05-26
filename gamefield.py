@@ -29,6 +29,13 @@ class GameField:
         self.__background_color = (0, 0, 0)
         self.__grid_color = (100, 100, 100)
         self.__wall_color = (0, 0, 204)
+        self.__status = "normal"
+
+    def setStatus(self, status):
+        self.__status = status
+
+    def getStatus(self):
+        return self.__status
 
     def getMatrix(self):
         return self.__matrix

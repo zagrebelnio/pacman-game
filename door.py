@@ -20,5 +20,4 @@ class Door:
         self.__status = "opened"
 
     def close(self):
-        print("door closed")
         self.__status = "closed"

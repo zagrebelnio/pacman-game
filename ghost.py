@@ -10,10 +10,12 @@ class Ghost:
         self._direction = "right"
         self._size = game_field.getGridSize()
         self._color = "red"
+        self._initial_color = "red"
         self._cell = [int(self._y // game_field.getGridSize()), int(self._x // game_field.getGridSize())]
         self._speed = 0.1
         self._target_cell = []
         self._turn_directions = {"left": False, "right": False, "up": False, "down": False}
+        self._status = "alive"
 
     def setX(self, x):
         self._x = x
@@ -26,6 +28,13 @@ class Ghost:
 
     def setCell(self, game_field):
         self._cell = [int(self._y // game_field.getGridSize()), int(self._x // game_field.getGridSize())]
+        if self._cell == [9, 9] or self._cell == [9, 10] or self._cell == [9, 11]:
+            self._status = "alive"
+            self._speed = 0.1
+            self._color = self._initial_color
+
+    def setSpeed(self, speed):
+        self._speed = speed
 
     def getX(self):
         return self._x
@@ -58,10 +67,13 @@ class Ghost:
         self._direction = "right"
 
     def setTarget(self, pacman):
-        if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
-            self._target_cell = pacman.getCell()
-        else:
-            self._target_cell = [10, 7]
+        if self._status == "died":
+            self._target_cell = [8, 10]
+        elif self._status == "alive":
+            if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
+                self._target_cell = pacman.getCell()
+            else:
+                self._target_cell = [10, 7]
     def move(self, dt, screen):
         if self._x < 0 - self._radius:
             self._x = screen.getWidth() + self._radius
@@ -116,21 +128,28 @@ class Ghost:
         elif direction == "down":
             return [self._cell[0] + 1, self._cell[1]]
 
-    def makeChoice(self, directions):
+    def makeChoice(self, directions, game_field, pacman):
         cells = []
         for direction in directions:
             cells.append(self.getNeighbourCell(direction))
         distances = []
-        for cell in cells:
-            distances.append(math.sqrt(math.pow((self._target_cell[0] - cell[0]), 2) + math.pow((self._target_cell[1] - cell[1]), 2)))
-        for i in range(len(distances)):
-            if distances[i] == min(distances):
-                return directions[i]
+        if game_field.getStatus() == "normal" or self._status == "died":
+            for cell in cells:
+                distances.append(math.sqrt(math.pow((self._target_cell[0] - cell[0]), 2) + math.pow((self._target_cell[1] - cell[1]), 2)))
+            for i in range(len(distances)):
+                if distances[i] == min(distances):
+                    return directions[i]
+        elif game_field.getStatus() == "bonused":
+            for cell in cells:
+                distances.append(math.sqrt(math.pow((pacman.getCell()[0] - cell[0]), 2) + math.pow((pacman.getCell()[1] - cell[1]), 2)))
+            for i in range(len(distances)):
+                if distances[i] == max(distances):
+                    return directions[i]
 
     def turn(self, next_direction, game_field):
         if self._cell[1] * game_field.getGridSize() + self._radius - 1 <= self._x <= self._cell[1] * game_field.getGridSize() + self._radius + 1 and self._cell[0] * game_field.getGridSize() + self._radius - 1 <= self._y <= self._cell[0] * game_field.getGridSize() + self._radius + 1:
             self._direction = next_direction
-    def changeDirection(self, game_field, door):
+    def changeDirection(self, game_field, door, pacman):
         self.checkNeighbourCells(game_field, door)
         is_in_impasse = True
         if self._direction == "left":
@@ -165,7 +184,7 @@ class Ghost:
                 if turn_direction == True:
                     directions.append(keys[i])
                 i += 1
-            next_direction = self.makeChoice(directions)
+            next_direction = self.makeChoice(directions, game_field, pacman)
             self.turn(next_direction, game_field)
 
         elif choices == 1:
@@ -180,11 +199,23 @@ class Ghost:
         else:
             return False
 
+    def killed(self):
+        self._status = "died"
+        self._color = "white"
+        self._speed = 0.3
+
+    def isAlive(self):
+        if self._status == "alive":
+            return True
+        else:
+            return False
+
 class GhostGuardian(Ghost):
 
     def __init__(self, game_field):
         super().__init__(game_field)
         self._color = "pink"
+        self._initial_color = "pink"
         self._bonus_target = []
 
     def setX(self, x):
@@ -198,6 +229,9 @@ class GhostGuardian(Ghost):
 
     def setCell(self, game_field):
         super().setCell(game_field)
+
+    def setSpeed(self, speed):
+        super().setSpeed(speed)
 
     def setBonusTarget(self, bonus):
         if bonus.getCords() == []:
@@ -235,10 +269,13 @@ class GhostGuardian(Ghost):
         super().reset(game_field)
 
     def setTarget(self, bonus, game_field):
-        if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
-            self._target_cell = [self._bonus_target[1] // game_field.getGridSize(), self._bonus_target[0] // game_field.getGridSize()]
-        else:
-            self._target_cell = [10, 7]
+        if self._status == "died":
+            self._target_cell = [8, 10]
+        elif self._status == "alive":
+            if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
+                self._target_cell = [self._bonus_target[1] // game_field.getGridSize(), self._bonus_target[0] // game_field.getGridSize()]
+            else:
+                self._target_cell = [10, 7]
     def move(self, dt, screen):
         super().move(dt, screen)
 
@@ -248,22 +285,29 @@ class GhostGuardian(Ghost):
     def getNeighbourCell(self, direction):
         return super().getNeighbourCell(direction)
 
-    def makeChoice(self, directions):
-        return super().makeChoice(directions)
+    def makeChoice(self, directions, game_field, pacman):
+        return super().makeChoice(directions, game_field, pacman)
 
     def turn(self, next_direction, game_field):
         super().turn(next_direction, game_field)
-    def changeDirection(self, game_field, door):
-        super().changeDirection(game_field, door)
+    def changeDirection(self, game_field, door, pacman):
+        super().changeDirection(game_field, door, pacman)
 
     def pacmanCollision(self, pacman):
         return super().pacmanCollision(pacman)
+
+    def killed(self):
+        super().killed()
+
+    def isAlive(self):
+        return super().isAlive()
 
 class GhostPatrol(Ghost):
 
     def __init__(self, game_field):
         super().__init__(game_field)
         self._color = "cyan"
+        self._initial_color = "cyan"
         self._possible_areas = [[3, 7, 5, 15], [11, 15, 5, 15]]
         self._patrol_area = random.choice(self._possible_areas)
         self._patrol_area_target = []
@@ -281,6 +325,9 @@ class GhostPatrol(Ghost):
         super().setCell(game_field)
         if self._cell == self._target_cell:
             self.setPatrolAreaTarget(game_field)
+
+    def setSpeed(self, speed):
+        super().setSpeed(speed)
 
     def setPatrolAreaTarget(self, game_field):
         target = [random.randint(self._patrol_area[0], self._patrol_area[1]),
@@ -318,10 +365,13 @@ class GhostPatrol(Ghost):
         super().reset(game_field)
 
     def setTarget(self, game_field):
-        if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
-            self._target_cell = self._patrol_area_target
-        else:
-            self._target_cell = [10, 7]
+        if self._status == "died":
+            self._target_cell = [8, 10]
+        elif self._status == "alive":
+            if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
+                self._target_cell = self._patrol_area_target
+            else:
+                self._target_cell = [10, 7]
     def move(self, dt, screen):
         super().move(dt, screen)
 
@@ -331,22 +381,29 @@ class GhostPatrol(Ghost):
     def getNeighbourCell(self, direction):
         return super().getNeighbourCell(direction)
 
-    def makeChoice(self, directions):
-        return super().makeChoice(directions)
+    def makeChoice(self, directions, game_field, pacman):
+        return super().makeChoice(directions, game_field, pacman)
 
     def turn(self, next_direction, game_field):
         super().turn(next_direction, game_field)
-    def changeDirection(self, game_field, door):
-        super().changeDirection(game_field, door)
+    def changeDirection(self, game_field, door, pacman):
+        super().changeDirection(game_field, door, pacman)
 
     def pacmanCollision(self, pacman):
         return super().pacmanCollision(pacman)
+
+    def killed(self):
+        super().killed()
+
+    def isAlive(self):
+        return super().isAlive()
 
 class GhostHaunter(Ghost):
 
     def __init__(self, game_field):
         super().__init__(game_field)
         self._color = "orange"
+        self._initial_color = "orange"
 
     def setX(self, x):
         super().setX(x)
@@ -359,6 +416,10 @@ class GhostHaunter(Ghost):
 
     def setCell(self, game_field):
         super().setCell(game_field)
+
+    def setSpeed(self, speed):
+        super().setSpeed(speed)
+
     def getX(self):
         return super().getX()
 
@@ -387,18 +448,21 @@ class GhostHaunter(Ghost):
         super().reset(game_field)
 
     def setTarget(self, pacman):
-        if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
-            target = pacman.getCell()
-            if pacman.getDirection() == "left":
-                self._target_cell = [target[0], target[1] - 2]
-            elif pacman.getDirection() == "right":
-                self._target_cell = [target[0], target[1] + 2]
-            elif pacman.getDirection() == "up":
-                self._target_cell = [target[0] - 2, target[1]]
-            elif pacman.getDirection() == "down":
-                self._target_cell = [target[0] + 2, target[1]]
-        else:
-            self._target_cell = [10, 7]
+        if self._status == "died":
+            self._target_cell = [8, 10]
+        elif self._status == "alive":
+            if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
+                target = pacman.getCell()
+                if pacman.getDirection() == "left":
+                    self._target_cell = [target[0], target[1] - 2]
+                elif pacman.getDirection() == "right":
+                    self._target_cell = [target[0], target[1] + 2]
+                elif pacman.getDirection() == "up":
+                    self._target_cell = [target[0] - 2, target[1]]
+                elif pacman.getDirection() == "down":
+                    self._target_cell = [target[0] + 2, target[1]]
+            else:
+                self._target_cell = [10, 7]
     def move(self, dt, screen):
         super().move(dt, screen)
 
@@ -408,13 +472,19 @@ class GhostHaunter(Ghost):
     def getNeighbourCell(self, direction):
         return super().getNeighbourCell(direction)
 
-    def makeChoice(self, directions):
-        return super().makeChoice(directions)
+    def makeChoice(self, directions, game_field, pacman):
+        return super().makeChoice(directions, game_field, pacman)
 
     def turn(self, next_direction, game_field):
         super().turn(next_direction, game_field)
-    def changeDirection(self, game_field, door):
-        super().changeDirection(game_field, door)
+    def changeDirection(self, game_field, door, pacman):
+        super().changeDirection(game_field, door, pacman)
 
     def pacmanCollision(self, pacman):
         return super().pacmanCollision(pacman)
+
+    def killed(self):
+        super().killed()
+
+    def isAlive(self):
+        return super().isAlive()
