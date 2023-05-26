@@ -1,3 +1,4 @@
+import pygame.time
 from pygame.locals import *
 from gamefield import *
 from screen import *
@@ -5,6 +6,7 @@ from pacman import *
 from food import *
 from block import *
 from ghost import *
+from door import *
 
 pygame.init()
 
@@ -27,10 +29,14 @@ ghost_guardian = GhostGuardian(game_field)
 ghost_patrol = GhostPatrol(game_field)
 ghost_patrol.setPatrolAreaTarget(game_field)
 ghost_haunter = GhostHaunter(game_field)
+door = Door(game_field)
 
 game_over = False
+start_time = pygame.time.get_ticks() / 1000
 
 while not game_over:
+    if pygame.time.get_ticks() / 1000 - start_time > 5:
+        door.open()
     dt = clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,6 +58,7 @@ while not game_over:
             pacman.setDirection("down")
     screen.fill()
     game_field.draw(screen)
+    door.draw(screen)
     game_field.drawGrid(screen)
     food.draw(screen)
     food.eat(pacman)
@@ -60,32 +67,36 @@ while not game_over:
     block.check_wall_collisions(pacman)
     block.check_wall_collisions(ghost)
     block.check_wall_collisions(ghost_guardian)
+    block.check_wall_collisions(ghost_patrol)
+    block.check_wall_collisions(ghost_haunter)
     pacman.draw(screen)
     pacman.setCell(game_field)
     ghost.draw(screen)
     ghost.setTarget(pacman)
-    ghost.changeDirection(game_field)
+    ghost.changeDirection(game_field, door)
     ghost.move(dt, screen)
     ghost.setCell(game_field)
     ghost_guardian.draw(screen)
     ghost_guardian.setBonusTarget(bonus)
     ghost_guardian.setTarget(bonus, game_field)
-    ghost_guardian.changeDirection(game_field)
+    ghost_guardian.changeDirection(game_field, door)
     ghost_guardian.move(dt, screen)
     ghost_guardian.setCell(game_field)
     ghost_patrol.draw(screen)
     ghost_patrol.setTarget(game_field)
-    ghost_patrol.changeDirection(game_field)
+    ghost_patrol.changeDirection(game_field, door)
     ghost_patrol.move(dt, screen)
     ghost_patrol.setCell(game_field)
     ghost_haunter.draw(screen)
     ghost_haunter.setTarget(pacman)
-    ghost_haunter.changeDirection(game_field)
+    ghost_haunter.changeDirection(game_field, door)
     ghost_haunter.move(dt, screen)
     ghost_haunter.setCell(game_field)
     if ghost.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
+        start_time = pygame.time.get_ticks() / 1000
+        door.close()
         pacman.decrementLifes()
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)
@@ -95,6 +106,8 @@ while not game_over:
     elif ghost_guardian.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
+        start_time = pygame.time.get_ticks() / 1000
+        door.close()
         pacman.decrementLifes()
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)
@@ -104,6 +117,8 @@ while not game_over:
     elif ghost_patrol.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
+        start_time = pygame.time.get_ticks() / 1000
+        door.close()
         pacman.decrementLifes()
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)
@@ -113,6 +128,8 @@ while not game_over:
     elif ghost_haunter.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
+        start_time = pygame.time.get_ticks() / 1000
+        door.close()
         pacman.decrementLifes()
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)

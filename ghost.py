@@ -4,10 +4,10 @@ import random
 
 class Ghost:
     def __init__(self, game_field):
-        self._x = 10 * game_field.getGridSize() + game_field.getGridSize() / 2
+        self._x = random.randint(9 * game_field.getGridSize() + game_field.getGridSize() / 2, 11 * game_field.getGridSize() + game_field.getGridSize() / 2)
         self._y = 9 * game_field.getGridSize() + game_field.getGridSize() / 2
         self._radius = game_field.getGridSize() / 2
-        self._direction = "up"
+        self._direction = "right"
         self._size = game_field.getGridSize()
         self._color = "red"
         self._cell = [int(self._y // game_field.getGridSize()), int(self._x // game_field.getGridSize())]
@@ -53,9 +53,9 @@ class Ghost:
         pygame.draw.rect(screen.getWindow(), self._color, (self._x - self._radius, self._y, 2 * self._radius, self._radius))
 
     def reset(self, game_field):
-        self._x = 10 * game_field.getGridSize() + game_field.getGridSize() / 2
+        self._x = random.randint(9 * game_field.getGridSize() + game_field.getGridSize() / 2, 11 * game_field.getGridSize() + game_field.getGridSize() / 2)
         self._y = 9 * game_field.getGridSize() + game_field.getGridSize() / 2
-        self._direction = "up"
+        self._direction = "right"
 
     def setTarget(self, pacman):
         if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
@@ -76,7 +76,7 @@ class Ghost:
         elif self._direction == "down":
             self._y += self._speed * dt
 
-    def checkNeighbourCells(self, game_field):
+    def checkNeighbourCells(self, game_field, door):
         if self._cell[1] <= 0 or self._cell[1] >= game_field.getCols() - 1:
             self._turn_directions["left"] = True
             self._turn_directions["right"] = True
@@ -93,11 +93,15 @@ class Ghost:
                 self._turn_directions["right"] = False
             # top cell
             if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] != 1:
+                if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] == 3 and door.getStatus() == "closed":
+                    return False
                 self._turn_directions["up"] = True
             else:
                 self._turn_directions["up"] = False
             # bottom cell
             if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] != 1:
+                if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] == 3 and door.getStatus() == "closed":
+                    return False
                 self._turn_directions["down"] = True
             else:
                 self._turn_directions["down"] = False
@@ -126,8 +130,8 @@ class Ghost:
     def turn(self, next_direction, game_field):
         if self._cell[1] * game_field.getGridSize() + self._radius - 1 <= self._x <= self._cell[1] * game_field.getGridSize() + self._radius + 1 and self._cell[0] * game_field.getGridSize() + self._radius - 1 <= self._y <= self._cell[0] * game_field.getGridSize() + self._radius + 1:
             self._direction = next_direction
-    def changeDirection(self, game_field):
-        self.checkNeighbourCells(game_field)
+    def changeDirection(self, game_field, door):
+        self.checkNeighbourCells(game_field, door)
         is_in_impasse = True
         if self._direction == "left":
             self._turn_directions["right"] = False
@@ -238,8 +242,8 @@ class GhostGuardian(Ghost):
     def move(self, dt, screen):
         super().move(dt, screen)
 
-    def checkNeighbourCells(self, game_field):
-        super().checkNeighbourCells(game_field)
+    def checkNeighbourCells(self, game_field, door):
+        super().checkNeighbourCells(game_field, door)
 
     def getNeighbourCell(self, direction):
         return super().getNeighbourCell(direction)
@@ -249,8 +253,8 @@ class GhostGuardian(Ghost):
 
     def turn(self, next_direction, game_field):
         super().turn(next_direction, game_field)
-    def changeDirection(self, game_field):
-        super().changeDirection(game_field)
+    def changeDirection(self, game_field, door):
+        super().changeDirection(game_field, door)
 
     def pacmanCollision(self, pacman):
         return super().pacmanCollision(pacman)
@@ -284,7 +288,7 @@ class GhostPatrol(Ghost):
         if game_field.getMatrix()[target[0]][target[1]] != 1:
             self._patrol_area_target = target
         else:
-            self.setTarget(game_field)
+            self.setPatrolAreaTarget(game_field)
 
     def getX(self):
         return super().getX()
@@ -321,8 +325,8 @@ class GhostPatrol(Ghost):
     def move(self, dt, screen):
         super().move(dt, screen)
 
-    def checkNeighbourCells(self, game_field):
-        super().checkNeighbourCells(game_field)
+    def checkNeighbourCells(self, game_field, door):
+        super().checkNeighbourCells(game_field, door)
 
     def getNeighbourCell(self, direction):
         return super().getNeighbourCell(direction)
@@ -332,8 +336,8 @@ class GhostPatrol(Ghost):
 
     def turn(self, next_direction, game_field):
         super().turn(next_direction, game_field)
-    def changeDirection(self, game_field):
-        super().changeDirection(game_field)
+    def changeDirection(self, game_field, door):
+        super().changeDirection(game_field, door)
 
     def pacmanCollision(self, pacman):
         return super().pacmanCollision(pacman)
@@ -398,8 +402,8 @@ class GhostHaunter(Ghost):
     def move(self, dt, screen):
         super().move(dt, screen)
 
-    def checkNeighbourCells(self, game_field):
-        super().checkNeighbourCells(game_field)
+    def checkNeighbourCells(self, game_field, door):
+        super().checkNeighbourCells(game_field, door)
 
     def getNeighbourCell(self, direction):
         return super().getNeighbourCell(direction)
@@ -409,8 +413,8 @@ class GhostHaunter(Ghost):
 
     def turn(self, next_direction, game_field):
         super().turn(next_direction, game_field)
-    def changeDirection(self, game_field):
-        super().changeDirection(game_field)
+    def changeDirection(self, game_field, door):
+        super().changeDirection(game_field, door)
 
     def pacmanCollision(self, pacman):
         return super().pacmanCollision(pacman)

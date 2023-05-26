@@ -77,14 +77,24 @@ class Pacman:
             elif self.__direction == "right" and direction == "left":
                 return True
         else:
-            if direction == "left" and self.__direction != "left" and game_field.getMatrix()[self.__cell[0]][self.__cell[1] - 1] != 1 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
+            if direction == "left" and self.__direction != "left" and self.getNeighhbourCell(direction, game_field) != 1 and self.getNeighhbourCell(direction, game_field) != 3 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
-            elif direction == "right" and self.__direction != "right" and game_field.getMatrix()[self.__cell[0]][self.__cell[1] + 1] != 1 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
+            elif direction == "right" and self.__direction != "right" and self.getNeighhbourCell(direction, game_field) != 1 and self.getNeighhbourCell(direction, game_field) != 3 and self.__cell[0] * game_field.getGridSize() + self.__radius - 2 <= self.__y <= (self.__cell[0] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
-            elif direction == "up" and self.__direction != "up" and game_field.getMatrix()[self.__cell[0] - 1][self.__cell[1]] != 1 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
+            elif direction == "up" and self.__direction != "up" and self.getNeighhbourCell(direction, game_field) != 1 and self.getNeighhbourCell(direction, game_field) != 3 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
-            elif direction == "down" and self.__direction != "down" and game_field.getMatrix()[self.__cell[0] + 1][self.__cell[1]] != 1 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
+            elif direction == "down" and self.__direction != "down" and self.getNeighhbourCell(direction, game_field) != 1 and self.getNeighhbourCell(direction, game_field) != 3 and self.__cell[1] * game_field.getGridSize() + self.__radius - 2 <= self.__x <= (self.__cell[1] + 1) * game_field.getGridSize() - self.__radius + 2:
                 return True
         return False
     def draw(self, screen):
         pygame.draw.circle(screen.getWindow(), self.__color, (self.__x, self.__y), self.__radius, self.__size)
+
+    def getNeighhbourCell(self, direction, game_field):
+        if direction == "left":
+            return game_field.getMatrix()[self.__cell[0]][self.__cell[1] - 1]
+        elif direction == "right":
+            return game_field.getMatrix()[self.__cell[0]][self.__cell[1] + 1]
+        elif direction == "up":
+            return game_field.getMatrix()[self.__cell[0] - 1][self.__cell[1]]
+        elif direction == "down":
+            return game_field.getMatrix()[self.__cell[0] + 1][self.__cell[1]]

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Added ghost patrolman.">
+    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Added second ghost haunter.">
+      <change afterPath="$PROJECT_DIR$/door.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gamefield.py" beforeDir="false" afterPath="$PROJECT_DIR$/gamefield.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pacman.py" beforeDir="false" afterPath="$PROJECT_DIR$/pacman.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +102,8 @@
       <workItem from="1684950096961" duration="9617000" />
       <workItem from="1685038427977" duration="3171000" />
       <workItem from="1685042236992" duration="6387000" />
-      <workItem from="1685084932198" duration="767000" />
+      <workItem from="1685084932198" duration="5171000" />
+      <workItem from="1685098177622" duration="3503000" />
     </task>
     <task id="LOCAL-00001" summary="Added Pacman, player movement and wall collisions.">
       <created>1684178755102</created>
@@ -157,7 +161,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685048565846</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added second ghost haunter.">
+      <created>1685085746999</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685085746999</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,9 +194,10 @@
     <MESSAGE value="Made classes attributes private, added setters and getters." />
     <MESSAGE value="Added ghost guardian and bonuses." />
     <MESSAGE value="Added ghost patrolman." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added ghost patrolman." />
+    <MESSAGE value="Added second ghost haunter." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added second ghost haunter." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685085653360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685101774171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
