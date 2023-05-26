@@ -283,7 +283,6 @@ class GhostPatrol(Ghost):
                   random.randint(self._patrol_area[2], self._patrol_area[3])]
         if game_field.getMatrix()[target[0]][target[1]] != 1:
             self._patrol_area_target = target
-            print(target)
         else:
             self.setTarget(game_field)
 
@@ -317,6 +316,83 @@ class GhostPatrol(Ghost):
     def setTarget(self, game_field):
         if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
             self._target_cell = self._patrol_area_target
+        else:
+            self._target_cell = [10, 7]
+    def move(self, dt, screen):
+        super().move(dt, screen)
+
+    def checkNeighbourCells(self, game_field):
+        super().checkNeighbourCells(game_field)
+
+    def getNeighbourCell(self, direction):
+        return super().getNeighbourCell(direction)
+
+    def makeChoice(self, directions):
+        return super().makeChoice(directions)
+
+    def turn(self, next_direction, game_field):
+        super().turn(next_direction, game_field)
+    def changeDirection(self, game_field):
+        super().changeDirection(game_field)
+
+    def pacmanCollision(self, pacman):
+        return super().pacmanCollision(pacman)
+
+class GhostHaunter(Ghost):
+
+    def __init__(self, game_field):
+        super().__init__(game_field)
+        self._color = "orange"
+
+    def setX(self, x):
+        super().setX(x)
+
+    def setY(self, y):
+        super().setY(y)
+
+    def setDirection(self, direction):
+        super().setDirection(direction)
+
+    def setCell(self, game_field):
+        super().setCell(game_field)
+    def getX(self):
+        return super().getX()
+
+    def getY(self):
+        return super().getY()
+
+    def getRadius(self):
+        return super().getRadius()
+
+    def getSize(self):
+        return super().getSize()
+
+    def getDirection(self):
+        return super().getDirection()
+
+    def getCell(self):
+        return super().getCell()
+
+    def getSpeed(self):
+        return super().getSpeed()
+
+    def draw(self, screen):
+        super().draw(screen)
+
+    def reset(self, game_field):
+        super().reset(game_field)
+
+    def setTarget(self, pacman):
+        if self._cell != [9, 9] and self._cell != [9, 10] and self._cell != [9, 11]:
+            target = pacman.getCell()
+            if pacman.getDirection() == "left":
+                self._target_cell = [target[0], target[1] - 2]
+            elif pacman.getDirection() == "right":
+                self._target_cell = [target[0], target[1] + 2]
+            elif pacman.getDirection() == "up":
+                self._target_cell = [target[0] - 2, target[1]]
+            elif pacman.getDirection() == "down":
+                self._target_cell = [target[0] + 2, target[1]]
         else:
             self._target_cell = [10, 7]
     def move(self, dt, screen):

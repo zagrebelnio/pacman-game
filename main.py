@@ -26,6 +26,7 @@ ghost = Ghost(game_field)
 ghost_guardian = GhostGuardian(game_field)
 ghost_patrol = GhostPatrol(game_field)
 ghost_patrol.setPatrolAreaTarget(game_field)
+ghost_haunter = GhostHaunter(game_field)
 
 game_over = False
 
@@ -77,6 +78,11 @@ while not game_over:
     ghost_patrol.changeDirection(game_field)
     ghost_patrol.move(dt, screen)
     ghost_patrol.setCell(game_field)
+    ghost_haunter.draw(screen)
+    ghost_haunter.setTarget(pacman)
+    ghost_haunter.changeDirection(game_field)
+    ghost_haunter.move(dt, screen)
+    ghost_haunter.setCell(game_field)
     if ghost.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
             game_over = True
@@ -84,6 +90,7 @@ while not game_over:
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)
         ghost_patrol.reset(game_field)
+        ghost_haunter.reset(game_field)
         pacman.reset(game_field)
     elif ghost_guardian.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
@@ -92,6 +99,7 @@ while not game_over:
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)
         ghost_patrol.reset(game_field)
+        ghost_haunter.reset(game_field)
         pacman.reset(game_field)
     elif ghost_patrol.pacmanCollision(pacman):
         if pacman.getLifes() == 0:
@@ -100,6 +108,16 @@ while not game_over:
         ghost.reset(game_field)
         ghost_guardian.reset(game_field)
         ghost_patrol.reset(game_field)
+        ghost_haunter.reset(game_field)
+        pacman.reset(game_field)
+    elif ghost_haunter.pacmanCollision(pacman):
+        if pacman.getLifes() == 0:
+            game_over = True
+        pacman.decrementLifes()
+        ghost.reset(game_field)
+        ghost_guardian.reset(game_field)
+        ghost_patrol.reset(game_field)
+        ghost_haunter.reset(game_field)
         pacman.reset(game_field)
 
     if food.getCords() == [] and bonus.getCords() == []:
