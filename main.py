@@ -1,4 +1,3 @@
-from pygame.locals import *
 from gameprocessing import *
 from gamefield import *
 from screen import *
@@ -21,7 +20,7 @@ while application_is_on:
         if menu_decision == "exit":
             application_is_on = False
     elif menu_decision == "start":
-        game_result, score, game_time, player_lifes = game_loop(game_field, screen)
+        game_result, score, game_time, player_lifes, exit_to_menu = game_loop(game_field, screen)
         if game_result is True:
             score = calculate_total_score(score, game_time, player_lifes)
             store_score(score)
@@ -30,7 +29,7 @@ while application_is_on:
             score = calculate_total_score(score, game_time, player_lifes)
             store_score(score)
             lose_screen(screen, score)
-        elif game_result is None:
+        elif game_result is None and exit_to_menu is False:
             application_is_on = False
 
 pygame.quit()

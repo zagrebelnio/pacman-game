@@ -116,6 +116,7 @@ def game_loop(game_field, screen):
     bonused_start = None
     game_result = None
     game_start = pygame.time.get_ticks() / 1000
+    exit_to_menu = True
     while not game_over:
         if pygame.time.get_ticks() / 1000 - start_time > 5:
             door.open()
@@ -123,6 +124,7 @@ def game_loop(game_field, screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
+                exit_to_menu = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 game_over = True
         pressed = pygame.key.get_pressed()
@@ -141,7 +143,7 @@ def game_loop(game_field, screen):
         screen.fill()
         game_field.draw(screen)
         door.draw(screen)
-        game_field.drawGrid(screen)
+        #game_field.drawGrid(screen)
         scorebar.setLifes(pacman)
         scorebar.draw(screen)
         food.draw(screen)
@@ -287,7 +289,7 @@ def game_loop(game_field, screen):
         player_lifes = pacman.getLifes()
     game_end = pygame.time.get_ticks() / 1000
     game_time = game_end - game_start
-    return game_result, scorebar.getScore(), game_time, player_lifes
+    return game_result, scorebar.getScore(), game_time, player_lifes, exit_to_menu
 
 def win_screen(screen, score):
     while True:

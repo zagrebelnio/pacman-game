@@ -24,3 +24,6 @@ class Screen():
 
     def showText(self, text, text_rect):
         self.__window.blit(text, text_rect)
+
+    def showImage(self, image, x, y):
+        self.__window.blit(image, (x, y))

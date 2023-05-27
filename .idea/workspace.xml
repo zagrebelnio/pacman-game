@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Fixed bugs with ghosts 180 degrees turn.">
+    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Added statistics display in game menu.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/block.py" beforeDir="false" afterPath="$PROJECT_DIR$/block.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/door.py" beforeDir="false" afterPath="$PROJECT_DIR$/door.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/food.py" beforeDir="false" afterPath="$PROJECT_DIR$/food.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gamefield.py" beforeDir="false" afterPath="$PROJECT_DIR$/gamefield.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/gameprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Yellow_Circle.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pacman.py" beforeDir="false" afterPath="$PROJECT_DIR$/pacman.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/result/scores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/result/scores.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/screen.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +113,7 @@
       <workItem from="1685114611420" duration="9217000" />
       <workItem from="1685127062693" duration="21000" />
       <workItem from="1685127318851" duration="7000" />
-      <workItem from="1685173145361" duration="22556000" />
+      <workItem from="1685173145361" duration="29608000" />
     </task>
     <task id="LOCAL-00001" summary="Added Pacman, player movement and wall collisions.">
       <created>1684178755102</created>
@@ -205,7 +213,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685194103123</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Added statistics display in game menu.">
+      <created>1685199316668</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1685199316668</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -237,9 +252,10 @@
     <MESSAGE value="Added game menu." />
     <MESSAGE value="Added score bar." />
     <MESSAGE value="Fixed bugs with ghosts 180 degrees turn." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed bugs with ghosts 180 degrees turn." />
+    <MESSAGE value="Added statistics display in game menu." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added statistics display in game menu." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685199243826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685208864161" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -96,26 +96,26 @@ class Ghost:
             self._turn_directions["right"] = True
         else:
             # left cell
-            if game_field.getMatrix()[self._cell[0]][self._cell[1] - 1] != 1:
+            if game_field.getMatrix()[self._cell[0]][self._cell[1] - 1] <= 2:
                 self._turn_directions["left"] = True
             else:
                 self._turn_directions["left"] = False
             # right cell
-            if game_field.getMatrix()[self._cell[0]][self._cell[1] + 1] != 1:
+            if game_field.getMatrix()[self._cell[0]][self._cell[1] + 1] <= 2:
                 self._turn_directions["right"] = True
             else:
                 self._turn_directions["right"] = False
             # top cell
-            if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] != 1:
-                if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] == 3 and door.getStatus() == "closed":
+            if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] <= 2:
+                if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] == 2 and door.getStatus() == "closed":
                     self._turn_directions["up"] = False
                 else:
                     self._turn_directions["up"] = True
             else:
                 self._turn_directions["up"] = False
             # bottom cell
-            if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] != 1:
-                if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] == 3 and door.getStatus() == "closed":
+            if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] <= 2:
+                if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] == 2 and door.getStatus() == "closed":
                     self._turn_directions["down"] = False
                 else:
                     self._turn_directions["down"] = True

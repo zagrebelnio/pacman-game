@@ -5,7 +5,7 @@ class Block:
     def reset(self, game_field):
         for y in range(game_field.getRows()):
             for x in range(game_field.getCols()):
-                if game_field.getMatrix()[y][x] == 1:
+                if game_field.getMatrix()[y][x] >= 3:
                     self.__rect.append([x * game_field.getGridSize(), y * game_field.getGridSize(), game_field.getGridSize(), game_field.getGridSize()])
     def check_wall_collisions(self, entity):
         # pacman-block collisions

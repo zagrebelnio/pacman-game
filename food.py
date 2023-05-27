@@ -40,7 +40,7 @@ class Bonus(Food):
     def reset(self, game_field):
         for y in range(game_field.getRows()):
             for x in range(game_field.getCols()):
-                if game_field.getMatrix()[y][x] == 2:
+                if game_field.getMatrix()[y][x] == 1:
                     self._cords.append(((x * game_field.getGridSize()) + game_field.getGridSize() / 2, (y * game_field.getGridSize()) + game_field.getGridSize() / 2))
 
     def draw(self, screen):

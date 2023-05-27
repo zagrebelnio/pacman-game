@@ -9,12 +9,13 @@ class Door:
         self.__x = self.__cell[1] * game_field.getGridSize() + game_field.getGridSize() / 2
         self.__y = self.__cell[0] * game_field.getGridSize() + game_field.getGridSize() / 2
         self.__color = "purple"
+        self.__image = pygame.image.load("images/2_door.png")
 
     def getStatus(self):
         return self.__status
 
     def draw(self, screen):
-        pygame.draw.rect(screen.getWindow(), self.__color, [self.__x - self.__width / 2, self.__y - self.__height / 2, self.__width, self.__height])
+        screen.showImage(self.__image, self.__x - self.__width / 2, self.__y - self.__width / 2)
 
     def open(self):
         self.__status = "opened"
