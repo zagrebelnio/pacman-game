@@ -17,11 +17,13 @@ while application_is_on:
     if menu_desicion == "exit":
         application_is_on = False
     elif menu_desicion == "start":
-        game_result = game_loop(game_field, screen)
+        game_result, score = game_loop(game_field, screen)
         if game_result is True:
-            win_screen(screen)
+            store_score(score)
+            win_screen(screen, score)
         elif game_result is False:
-            lose_screen(screen)
+            store_score(score)
+            lose_screen(screen, score)
         elif game_result is None:
             application_is_on = False
 

@@ -25,7 +25,7 @@ class Food:
         for i in range(len(self._cords)):
             if self._cords[i][0] - pacman.getRadius() + self._radius <= pacman.getX() <= self._cords[i][0] + pacman.getRadius() - self._radius and self._cords[i][1] - pacman.getRadius() + self._radius <= pacman.getY() <= self._cords[i][1] + pacman.getRadius() - self._radius:
                 self._cords.pop(i)
-                break
+                return True
 
 class Bonus(Food):
 

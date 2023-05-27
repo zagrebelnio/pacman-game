@@ -5,38 +5,40 @@ from block import *
 from ghost import *
 from door import *
 from button import *
+from scorebar import *
 
 def show_menu(screen):
-    screen.fill()
+    while True:
+        screen.fill()
 
-    font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 128)
-    title = font.render("PACMAN", True, "yellow")
-    title_rect = [(screen.getWidth() - title.get_width()) // 2, 100, title.get_width(), title.get_height()]
-    screen.showText(title, title_rect)
+        font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 128)
+        title = font.render("PACMAN", True, "yellow")
+        title_rect = [(screen.getWidth() - title.get_width()) // 2, 100, title.get_width(), title.get_height()]
+        screen.showText(title, title_rect)
 
-    start_button = Button("START", screen.getWidth() / 2 - 175, 250)
-    start_button.draw(screen)
+        start_button = Button("START", screen.getWidth() / 2 - 175, 250)
+        start_button.draw(screen)
 
-    statistics_button = Button("STATISTICS", screen.getWidth() / 2 - 175, 400)
-    statistics_button.draw(screen)
+        statistics_button = Button("STATISTICS", screen.getWidth() / 2 - 175, 400)
+        statistics_button.draw(screen)
 
-    exit_button = Button("EXIT", screen.getWidth() / 2 - 175, 550)
-    exit_button.draw(screen)
-    for event in pygame.event.get():
-        if start_button.checkClick(event):
-            return "start"
-        if statistics_button.checkClick(event):
-            print("statistics button clicked")
-        if exit_button.checkClick(event):
-            return "exit"
-        if event.type == pygame.QUIT:
-            return "exit"
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            return "exit"
+        exit_button = Button("EXIT", screen.getWidth() / 2 - 175, 550)
+        exit_button.draw(screen)
+        for event in pygame.event.get():
+            if start_button.checkClick(event):
+                return "start"
+            if statistics_button.checkClick(event):
+                print("statistics button clicked")
+            if exit_button.checkClick(event):
+                return "exit"
+            if event.type == pygame.QUIT:
+                return "exit"
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                return "exit"
 
-    pygame.display.update()
+        pygame.display.update()
 
-def initialize_game(game_field):
+def initialize_game(game_field, screen):
     pacman = Pacman(game_field)
     clock = pygame.time.Clock()
     food = Food(game_field)
@@ -51,10 +53,11 @@ def initialize_game(game_field):
     ghost_patrol.setPatrolAreaTarget(game_field)
     ghost_haunter = GhostHaunter(game_field)
     door = Door(game_field)
-    return pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door
+    scorebar = ScoreBar(game_field, screen)
+    return pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, scorebar
 
 def game_loop(game_field, screen):
-    pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door = initialize_game(game_field)
+    pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, scorebar = initialize_game(game_field, screen)
     game_over = False
     start_time = pygame.time.get_ticks() / 1000
     bonused_start = None
@@ -85,10 +88,14 @@ def game_loop(game_field, screen):
         game_field.draw(screen)
         door.draw(screen)
         game_field.drawGrid(screen)
+        scorebar.setLifes(pacman)
+        scorebar.draw(screen)
         food.draw(screen)
-        food.eat(pacman)
+        if food.eat(pacman):
+            scorebar.increaseScore(1)
         bonus.draw(screen)
         if bonus.eat(pacman):
+            scorebar.increaseScore(10)
             bonused_start = pygame.time.get_ticks() / 1000
             game_field.setStatus("bonused")
 
@@ -144,7 +151,7 @@ def game_loop(game_field, screen):
         ghost_haunter.setCell(game_field)
         if ghost.pacmanCollision(pacman):
             if game_field.getStatus() == "normal":
-                if pacman.getLifes() == 0:
+                if pacman.getLifes() == 1:
                     game_over = True
                     game_result = False
                 start_time = pygame.time.get_ticks() / 1000
@@ -157,9 +164,11 @@ def game_loop(game_field, screen):
                 pacman.reset(game_field)
             elif game_field.getStatus() == "bonused":
                 ghost.killed()
+                scorebar.increaseScore(100)
+
         elif ghost_guardian.pacmanCollision(pacman):
             if game_field.getStatus() == "normal":
-                if pacman.getLifes() == 0:
+                if pacman.getLifes() == 1:
                     game_over = True
                     game_result = False
                 start_time = pygame.time.get_ticks() / 1000
@@ -172,10 +181,11 @@ def game_loop(game_field, screen):
                 pacman.reset(game_field)
             elif game_field.getStatus() == "bonused":
                 ghost_guardian.killed()
+                scorebar.increaseScore(100)
 
         elif ghost_patrol.pacmanCollision(pacman):
             if game_field.getStatus() == "normal":
-                if pacman.getLifes() == 0:
+                if pacman.getLifes() == 1:
                     game_over = True
                     game_result = False
                 start_time = pygame.time.get_ticks() / 1000
@@ -188,10 +198,11 @@ def game_loop(game_field, screen):
                 pacman.reset(game_field)
             elif game_field.getStatus() == "bonused":
                 ghost_patrol.killed()
+                scorebar.increaseScore(100)
 
         elif ghost_haunter.pacmanCollision(pacman):
             if game_field.getStatus() == "normal":
-                if pacman.getLifes() == 0:
+                if pacman.getLifes() == 1:
                     game_over = True
                     game_result = False
                 start_time = pygame.time.get_ticks() / 1000
@@ -204,6 +215,7 @@ def game_loop(game_field, screen):
                 pacman.reset(game_field)
             elif game_field.getStatus() == "bonused":
                 ghost_haunter.killed()
+                scorebar.increaseScore(100)
 
         if food.getCords() == [] and bonus.getCords() == []:
             game_over = True
@@ -212,9 +224,9 @@ def game_loop(game_field, screen):
         pacman.move(dt, screen)
         pygame.display.update()
 
-    return game_result
+    return game_result, scorebar.getScore()
 
-def win_screen(screen):
+def win_screen(screen, score):
     while True:
         screen.fill()
 
@@ -223,6 +235,8 @@ def win_screen(screen):
         title_rect = [(screen.getWidth() - title.get_width()) // 2, 100, title.get_width(), title.get_height()]
         screen.showText(title, title_rect)
 
+        draw_score(screen, score)
+
         menu_button = Button("MENU", screen.getWidth() / 2 - 175, 550)
         menu_button.draw(screen)
         for event in pygame.event.get():
@@ -235,7 +249,7 @@ def win_screen(screen):
 
         pygame.display.update()
 
-def lose_screen(screen):
+def lose_screen(screen, score):
     while True:
         screen.fill()
 
@@ -244,6 +258,8 @@ def lose_screen(screen):
         title_rect = [(screen.getWidth() - title.get_width()) // 2, 100, title.get_width(), title.get_height()]
         screen.showText(title, title_rect)
 
+        draw_score(screen, score)
+
         menu_button = Button("MENU", screen.getWidth() / 2 - 175, 550)
         menu_button.draw(screen)
         for event in pygame.event.get():
@@ -255,3 +271,17 @@ def lose_screen(screen):
                 return "exit"
 
         pygame.display.update()
+
+def draw_score(screen, score):
+    font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 96)
+    title = font.render("YOUR SCORE IS", True, "white")
+    title_rect = [(screen.getWidth() - title.get_width()) // 2, 250, title.get_width(), title.get_height()]
+    screen.showText(title, title_rect)
+    result = font.render(f"{score}", True, "white")
+    result_rect = [(screen.getWidth() - result.get_width()) // 2, 350, result.get_width(), result.get_height()]
+    screen.showText(result, result_rect)
+
+def store_score(score):
+    with open("result/scores.txt", 'a') as file:
+        file.write(str(score) + '\n')
+        file.close()
