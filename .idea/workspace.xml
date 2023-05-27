@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Reworked game field.">
+    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Redesigned pacman with animation.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gamefield.py" beforeDir="false" afterPath="$PROJECT_DIR$/gamefield.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/gameprocessing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pacman.py" beforeDir="false" afterPath="$PROJECT_DIR$/pacman.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/result/scores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/result/scores.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +105,7 @@
       <workItem from="1685127062693" duration="21000" />
       <workItem from="1685127318851" duration="7000" />
       <workItem from="1685173145361" duration="30142000" />
-      <workItem from="1685209609300" duration="3707000" />
+      <workItem from="1685209609300" duration="7112000" />
     </task>
     <task id="LOCAL-00001" summary="Added Pacman, player movement and wall collisions.">
       <created>1684178755102</created>
@@ -221,7 +219,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685208967889</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Redesigned pacman with animation.">
+      <created>1685214237544</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1685214237544</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -255,9 +260,10 @@
     <MESSAGE value="Fixed bugs with ghosts 180 degrees turn." />
     <MESSAGE value="Added statistics display in game menu." />
     <MESSAGE value="Reworked game field." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reworked game field." />
+    <MESSAGE value="Redesigned pacman with animation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Redesigned pacman with animation." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685214077512" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685219537797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

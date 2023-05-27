@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+import os
 
 class Ghost:
     def __init__(self, game_field):
@@ -17,6 +18,17 @@ class Ghost:
         self._turn_directions = {"left": False, "right": False, "up": False, "down": False}
         self._status = "alive"
         self._previous_cell = []
+        self._frames = []
+        self._path = "images/ghosts_frames"
+        self._counter = 0
+
+    def setFrames(self):
+        self._frames.clear()
+        path = self._path + os.sep + self._color + os.sep + self._direction
+        for file_name in os.listdir(path):
+            frame = pygame.transform.scale(pygame.image.load(path + os.sep + file_name),
+                                           (self._size, self._size))
+            self._frames.append(frame)
 
     def setX(self, x):
         self._x = x
@@ -58,9 +70,25 @@ class Ghost:
     def getSpeed(self):
         return self._speed
 
-    def draw(self, screen):
-        pygame.draw.circle(screen.getWindow(), self._color, (self._x, self._y), self._radius, self._size)
-        pygame.draw.rect(screen.getWindow(), self._color, (self._x - self._radius, self._y, 2 * self._radius, self._radius))
+    def draw(self, screen, game_field):
+        if game_field.getStatus() == "bonused" and self.isAlive():
+            self._color = "scared"
+        elif game_field.getStatus() == "normal" and self.isAlive():
+            self._color = self._initial_color
+        self.setFrames()
+        divider = 15
+        if self._counter < len(self._frames) * divider - 1:
+            self._counter += 1
+        else:
+            self._counter = 0
+        if self._direction == "left":
+            screen.showImage(self._frames[self._counter // divider], self._x - self._radius, self._y - self._radius)
+        elif self._direction == "right":
+            screen.showImage(self._frames[self._counter // divider], self._x - self._radius, self._y - self._radius)
+        elif self._direction == "up":
+            screen.showImage(self._frames[self._counter // divider], self._x - self._radius, self._y - self._radius)
+        elif self._direction == "down":
+            screen.showImage(self._frames[self._counter // divider], self._x - self._radius, self._y - self._radius)
 
     def reset(self, game_field):
         self._x = random.randint(9 * game_field.getGridSize() + game_field.getGridSize() / 2, 11 * game_field.getGridSize() + game_field.getGridSize() / 2)
@@ -207,7 +235,7 @@ class Ghost:
 
     def killed(self):
         self._status = "died"
-        self._color = "white"
+        self._color = "dead"
         self._speed = 0.25
 
     def isAlive(self):
@@ -223,6 +251,9 @@ class GhostGuardian(Ghost):
         self._color = "pink"
         self._initial_color = "pink"
         self._bonus_target = []
+
+    def setFrames(self):
+        super().setFrames()
 
     def setX(self, x):
         super().setX(x)
@@ -268,8 +299,8 @@ class GhostGuardian(Ghost):
     def getSpeed(self):
         return super().getSpeed()
 
-    def draw(self, screen):
-        super().draw(screen)
+    def draw(self, screen, game_field):
+        super().draw(screen, game_field)
 
     def reset(self, game_field):
         super().reset(game_field)
@@ -312,11 +343,15 @@ class GhostPatrol(Ghost):
 
     def __init__(self, game_field):
         super().__init__(game_field)
-        self._color = "cyan"
-        self._initial_color = "cyan"
+        self._color = "lightblue"
+        self._initial_color = "lightblue"
         self._possible_areas = [[3, 7, 5, 15], [11, 15, 5, 15]]
         self._patrol_area = random.choice(self._possible_areas)
         self._patrol_area_target = []
+        self._path = "images/ghosts_frames"
+
+    def setFrames(self):
+        super().setFrames()
 
     def setX(self, x):
         super().setX(x)
@@ -364,8 +399,8 @@ class GhostPatrol(Ghost):
     def getSpeed(self):
         return super().getSpeed()
 
-    def draw(self, screen):
-        super().draw(screen)
+    def draw(self, screen, game_field):
+        super().draw(screen, game_field)
 
     def reset(self, game_field):
         super().reset(game_field)
@@ -410,6 +445,10 @@ class GhostHaunter(Ghost):
         super().__init__(game_field)
         self._color = "orange"
         self._initial_color = "orange"
+        self._path = "images/ghosts_frames"
+
+    def setFrames(self):
+        super().setFrames()
 
     def setX(self, x):
         super().setX(x)
@@ -447,8 +486,8 @@ class GhostHaunter(Ghost):
     def getSpeed(self):
         return super().getSpeed()
 
-    def draw(self, screen):
-        super().draw(screen)
+    def draw(self, screen, game_field):
+        super().draw(screen, game_field)
 
     def reset(self, game_field):
         super().reset(game_field)
