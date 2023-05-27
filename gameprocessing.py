@@ -28,7 +28,7 @@ def show_menu(screen):
             if start_button.checkClick(event):
                 return "start"
             if statistics_button.checkClick(event):
-                print("statistics button clicked")
+                return "statistics"
             if exit_button.checkClick(event):
                 return "exit"
             if event.type == pygame.QUIT:
@@ -37,6 +37,59 @@ def show_menu(screen):
                 return "exit"
 
         pygame.display.update()
+
+def show_statistics(screen):
+    scores = []
+    with open("result/scores.txt", "r") as file:
+        for line in file:
+            score = line.strip()
+            scores.append(score)
+    scores.sort(key=int, reverse=True)
+    while True:
+        screen.fill()
+
+        font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 128)
+        title = font.render("STATISTICS", True, "yellow")
+        title_rect = [(screen.getWidth() - title.get_width()) // 2, 30, title.get_width(), title.get_height()]
+        screen.showText(title, title_rect)
+        sheet_font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 48)
+        if scores == []:
+            text_lines = ["SORRY, BUT THERE", "ARE NO SCORES!"]
+            y = 120
+            for line in text_lines:
+                line_text = sheet_font.render(line, True, "white")
+                line_rect = [(screen.getWidth() - line_text.get_width()) // 2, y, line_text.get_width(),
+                            line_text.get_height()]
+                screen.showText(line_text, line_rect)
+                y += 35
+        else:
+            heading = sheet_font.render("TOP SCORES", True, "white")
+            heading_rect = [(screen.getWidth() - heading.get_width()) // 2, 120, heading.get_width(),
+                            heading.get_height()]
+            screen.showText(heading, heading_rect)
+            y = 158
+            length = 10
+            if length > len(scores):
+                length = len(scores)
+            for i in range(length):
+                score_text = sheet_font.render(f"{scores[i]}", True, "white")
+                score_rect = [(screen.getWidth() - score_text.get_width()) // 2, y, score_text.get_width(),
+                              score_text.get_height()]
+                screen.showText(score_text, score_rect)
+                y += 38
+
+        menu_button = Button("MENU", screen.getWidth() / 2 - 175, 550)
+        menu_button.draw(screen)
+        for event in pygame.event.get():
+            if menu_button.checkClick(event):
+                return "menu"
+            if event.type == pygame.QUIT:
+                return "exit"
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                return "menu"
+
+        pygame.display.update()
+
 
 def initialize_game(game_field, screen):
     pacman = Pacman(game_field)
@@ -62,6 +115,7 @@ def game_loop(game_field, screen):
     start_time = pygame.time.get_ticks() / 1000
     bonused_start = None
     game_result = None
+    game_start = pygame.time.get_ticks() / 1000
     while not game_over:
         if pygame.time.get_ticks() / 1000 - start_time > 5:
             door.open()
@@ -228,7 +282,12 @@ def game_loop(game_field, screen):
         pacman.move(dt, screen)
         pygame.display.update()
 
-    return game_result, scorebar.getScore()
+    player_lifes = 0
+    if game_result == True:
+        player_lifes = pacman.getLifes()
+    game_end = pygame.time.get_ticks() / 1000
+    game_time = game_end - game_start
+    return game_result, scorebar.getScore(), game_time, player_lifes
 
 def win_screen(screen, score):
     while True:
@@ -249,7 +308,7 @@ def win_screen(screen, score):
             if event.type == pygame.QUIT:
                 return "exit"
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return "exit"
+                return "menu"
 
         pygame.display.update()
 
@@ -272,7 +331,7 @@ def lose_screen(screen, score):
             if event.type == pygame.QUIT:
                 return "exit"
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return "exit"
+                return "menu"
 
         pygame.display.update()
 
@@ -285,7 +344,16 @@ def draw_score(screen, score):
     result_rect = [(screen.getWidth() - result.get_width()) // 2, 350, result.get_width(), result.get_height()]
     screen.showText(result, result_rect)
 
+def calculate_total_score(score, game_time, player_lifes):
+    if player_lifes == 0:
+        return score
+    else:
+        lifes_coefs = {1: 1.5, 2: 2, 3: 3}
+        time_coef = 1
+        if game_time <= 480:
+            time_coef = 480 / game_time
+        return int(score * lifes_coefs[player_lifes] * time_coef)
+
 def store_score(score):
     with open("result/scores.txt", 'a') as file:
         file.write(str(score) + '\n')
-        file.close()
