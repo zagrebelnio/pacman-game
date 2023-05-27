@@ -1,7 +1,7 @@
 from gameprocessing import *
 from gamefield import *
 from screen import *
-from door import *
+import pygame
 
 pygame.init()
 
