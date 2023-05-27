@@ -16,6 +16,7 @@ class Ghost:
         self._target_cell = []
         self._turn_directions = {"left": False, "right": False, "up": False, "down": False}
         self._status = "alive"
+        self._previous_cell = []
 
     def setX(self, x):
         self._x = x
@@ -65,6 +66,7 @@ class Ghost:
         self._x = random.randint(9 * game_field.getGridSize() + game_field.getGridSize() / 2, 11 * game_field.getGridSize() + game_field.getGridSize() / 2)
         self._y = 9 * game_field.getGridSize() + game_field.getGridSize() / 2
         self._direction = "right"
+        self._previous_cell = []
 
     def setTarget(self, pacman):
         if self._status == "died":
@@ -106,15 +108,17 @@ class Ghost:
             # top cell
             if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] != 1:
                 if game_field.getMatrix()[self._cell[0] - 1][self._cell[1]] == 3 and door.getStatus() == "closed":
-                    return False
-                self._turn_directions["up"] = True
+                    self._turn_directions["up"] = False
+                else:
+                    self._turn_directions["up"] = True
             else:
                 self._turn_directions["up"] = False
             # bottom cell
             if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] != 1:
                 if game_field.getMatrix()[self._cell[0] + 1][self._cell[1]] == 3 and door.getStatus() == "closed":
-                    return False
-                self._turn_directions["down"] = True
+                    self._turn_directions["down"] = False
+                else:
+                    self._turn_directions["down"] = True
             else:
                 self._turn_directions["down"] = False
 
@@ -148,7 +152,9 @@ class Ghost:
 
     def turn(self, next_direction, game_field):
         if self._cell[1] * game_field.getGridSize() + self._radius - 1 <= self._x <= self._cell[1] * game_field.getGridSize() + self._radius + 1 and self._cell[0] * game_field.getGridSize() + self._radius - 1 <= self._y <= self._cell[0] * game_field.getGridSize() + self._radius + 1:
-            self._direction = next_direction
+            if self.getCell() != self._previous_cell:
+                self._direction = next_direction
+                self._previous_cell = self.getCell()
     def changeDirection(self, game_field, door, pacman):
         self.checkNeighbourCells(game_field, door)
         is_in_impasse = True
@@ -202,7 +208,7 @@ class Ghost:
     def killed(self):
         self._status = "died"
         self._color = "white"
-        self._speed = 0.3
+        self._speed = 0.25
 
     def isAlive(self):
         if self._status == "alive":

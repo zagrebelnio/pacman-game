@@ -13,10 +13,10 @@ pygame.display.set_caption("Pacman")
 application_is_on = True
 
 while application_is_on:
-    menu_desicion = show_menu(screen)
-    if menu_desicion == "exit":
+    menu_decision = show_menu(screen)
+    if menu_decision == "exit":
         application_is_on = False
-    elif menu_desicion == "start":
+    elif menu_decision == "start":
         game_result, score = game_loop(game_field, screen)
         if game_result is True:
             store_score(score)
