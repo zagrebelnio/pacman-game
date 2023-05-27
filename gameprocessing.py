@@ -143,7 +143,6 @@ def game_loop(game_field, screen):
         screen.fill()
         game_field.draw(screen)
         door.draw(screen)
-        #game_field.drawGrid(screen)
         scorebar.setLifes(pacman)
         scorebar.draw(screen)
         food.draw(screen)

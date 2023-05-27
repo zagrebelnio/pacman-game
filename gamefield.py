@@ -94,9 +94,3 @@ class GameField:
                     screen.showImage(self.__crossing_top_left_bottom, x * self.__grid_size, y * self.__grid_size)
                 elif self.__matrix[y][x] == 16:
                     screen.showImage(self.__crossing_left_top_right, x * self.__grid_size, y * self.__grid_size)
-
-    def drawGrid(self, screen):
-        for y in range(self.__rows):
-            for x in range(self.__cols):
-                pygame.draw.rect(screen.getWindow(), self.__grid_color,
-                         [x * self.__grid_size, y * self.__grid_size, self.__grid_size, self.__grid_size], 1)

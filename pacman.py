@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Pacman:
     def __init__(self, game_field):
@@ -11,6 +12,12 @@ class Pacman:
         self.__speed = 0.1
         self.__color = "yellow"
         self.__lifes = 3
+        self.__frames = []
+        for file_name in os.listdir("images/pacman_frames"):
+            frame = pygame.transform.scale(pygame.image.load("images/pacman_frames" + os.sep + file_name), (self.__size + 5, self.__size + 5))
+            self.__frames.append(frame)
+        self.__counter = 0
+        self.__animating_forward = True
 
     def setX(self, x):
         self.__x = x
@@ -87,7 +94,25 @@ class Pacman:
                 return True
         return False
     def draw(self, screen):
-        pygame.draw.circle(screen.getWindow(), self.__color, (self.__x, self.__y), self.__radius, self.__size)
+        divider = 5
+        if self.__animating_forward:
+            if self.__counter < len(self.__frames) * divider - 1:
+                self.__counter += 1
+            else:
+                self.__animating_forward = False
+        else:
+            if self.__counter > 1:
+                self.__counter -= 1
+            else:
+                self.__animating_forward = True
+        if self.__direction == "left":
+            screen.showImage(pygame.transform.flip(self.__frames[self.__counter // divider], True, False), self.__x - self.__radius, self.__y - self.__radius)
+        elif self.__direction == "right":
+            screen.showImage(self.__frames[self.__counter // divider], self.__x - self.__radius, self.__y - self.__radius)
+        elif self.__direction == "up":
+            screen.showImage(pygame.transform.rotate(self.__frames[self.__counter // divider], 90), self.__x - self.__radius, self.__y - self.__radius)
+        elif self.__direction == "down":
+            screen.showImage(pygame.transform.rotate(self.__frames[self.__counter // divider], 270), self.__x - self.__radius, self.__y - self.__radius)
 
     def getNeighhbourCell(self, direction, game_field):
         if direction == "left":
