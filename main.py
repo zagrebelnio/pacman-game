@@ -11,15 +11,20 @@ pygame.display.set_caption("Pacman")
 
 application_is_on = True
 
+music = Music()
+music.playMenu()
+volume_index = 0
+
 while application_is_on:
-    menu_decision = show_menu(screen)
+    menu_decision, volume_index = show_menu(screen, music, volume_index)
     if menu_decision == "exit":
         application_is_on = False
     elif menu_decision == "statistics":
-        menu_decision = show_statistics(screen)
+        menu_decision,  volume_index = show_statistics(screen, music, volume_index)
         if menu_decision == "exit":
             application_is_on = False
     elif menu_decision == "start":
+        music.menuStop()
         game_result, score, game_time, player_lifes, exit_to_menu = game_loop(game_field, screen)
         if game_result is True:
             score = calculate_total_score(score, game_time, player_lifes)
@@ -31,5 +36,6 @@ while application_is_on:
             lose_screen(screen, score)
         elif game_result is None and exit_to_menu is False:
             application_is_on = False
+        music.playMenu()
 
 pygame.quit()

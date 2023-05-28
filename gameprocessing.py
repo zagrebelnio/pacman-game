@@ -6,8 +6,10 @@ from ghost import *
 from door import *
 from button import *
 from scorebar import *
+from music import *
 
-def show_menu(screen):
+def show_menu(screen, music, volume_index):
+    volume_images = ["images/menu/volume_on.png", "images/menu/volume_off.png"]
     while True:
         screen.fill()
 
@@ -24,21 +26,49 @@ def show_menu(screen):
 
         exit_button = Button("EXIT", screen.getWidth() / 2 - 175, 550)
         exit_button.draw(screen)
+
+        volume_button = ImageButton(screen.getWidth() - 100, screen.getHeight() - 100, 60, 60, volume_images[volume_index])
+        volume_button.draw(screen)
+
+        next_track_button = ImageButton(screen.getWidth() - 70, screen.getHeight() - 150, 40, 40, "images/menu/skip.png")
+        next_track_button.draw(screen)
+
+        previous_track_button = ImageButton(screen.getWidth() - 110, screen.getHeight() - 150, 40, 40, "images/menu/skip.png", 180)
+        previous_track_button.draw(screen)
+
+        screen.showImage(pygame.transform.scale(pygame.image.load("images/pacman_frames/pacman_frame_3.png"), (100, 100)), 10, 40)
+        screen.showImage(pygame.transform.scale(pygame.image.load("images/ghosts_frames/red/right/1.png"), (100, 100)), 10, 200)
+        screen.showImage(pygame.transform.scale(pygame.image.load("images/ghosts_frames/pink/up/pixil-frame-3.png"), (100, 100)),10, 325)
+        screen.showImage(pygame.transform.scale(pygame.image.load("images/ghosts_frames/orange/left/1.png"), (100, 100)), 10, 450)
+        screen.showImage(pygame.transform.scale(pygame.image.load("images/ghosts_frames/lightblue/down/pixil-frame-2.png"), (100, 100)), 10, 575)
+
         for event in pygame.event.get():
             if start_button.checkClick(event):
-                return "start"
+                return "start", volume_index
             if statistics_button.checkClick(event):
-                return "statistics"
+                return "statistics", volume_index
             if exit_button.checkClick(event):
-                return "exit"
+                return "exit", volume_index
+            if volume_button.checkClick(event):
+                if volume_index == 0:
+                    music.soundOff()
+                    volume_index = 1
+                else:
+                    music.sounfOn()
+                    volume_index = 0
+            if next_track_button.checkClick(event):
+                music.next_menu_track()
+            if previous_track_button.checkClick(event):
+                music.previous_menu_track()
             if event.type == pygame.QUIT:
-                return "exit"
+                return "exit", volume_index
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return "exit"
+                return "exit", volume_index
 
         pygame.display.update()
 
-def show_statistics(screen):
+def show_statistics(screen, music, volume_index):
+    volume_images = ["images/menu/volume_on.png", "images/menu/volume_off.png"]
     scores = []
     with open("result/scores.txt", "r") as file:
         for line in file:
@@ -80,13 +110,34 @@ def show_statistics(screen):
 
         menu_button = Button("MENU", screen.getWidth() / 2 - 175, 550)
         menu_button.draw(screen)
+
+        volume_button = ImageButton(screen.getWidth() - 100, screen.getHeight() - 100, 60, 60,volume_images[volume_index])
+        volume_button.draw(screen)
+
+        next_track_button = ImageButton(screen.getWidth() - 70, screen.getHeight() - 150, 40, 40, "images/menu/skip.png")
+        next_track_button.draw(screen)
+
+        previous_track_button = ImageButton(screen.getWidth() - 110, screen.getHeight() - 150, 40, 40, "images/menu/skip.png", 180)
+        previous_track_button.draw(screen)
+
         for event in pygame.event.get():
             if menu_button.checkClick(event):
-                return "menu"
+                return "menu", volume_index
+            if volume_button.checkClick(event):
+                if volume_index == 0:
+                    music.soundOff()
+                    volume_index = 1
+                else:
+                    music.sounfOn()
+                    volume_index = 0
+            if next_track_button.checkClick(event):
+                music.next_menu_track()
+            if previous_track_button.checkClick(event):
+                music.previous_menu_track()
             if event.type == pygame.QUIT:
-                return "exit"
+                return "exit", volume_index
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return "menu"
+                return "menu", volume_index
 
         pygame.display.update()
 
