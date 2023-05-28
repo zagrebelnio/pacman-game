@@ -13,7 +13,7 @@ class Ghost:
         self._color = "red"
         self._initial_color = "red"
         self._cell = [int(self._y // game_field.getGridSize()), int(self._x // game_field.getGridSize())]
-        self._speed = 0.1
+        self._speed = 0.11
         self._target_cell = []
         self._turn_directions = {"left": False, "right": False, "up": False, "down": False}
         self._status = "alive"
@@ -43,7 +43,7 @@ class Ghost:
         self._cell = [int(self._y // game_field.getGridSize()), int(self._x // game_field.getGridSize())]
         if self._cell == [9, 9] or self._cell == [9, 10] or self._cell == [9, 11]:
             self._status = "alive"
-            self._speed = 0.1
+            self._speed = 0.11
             self._color = self._initial_color
 
     def setSpeed(self, speed):

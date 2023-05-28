@@ -12,6 +12,7 @@ class Button:
         self.__font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 50)
         self.__text = self.__font.render(text, True, self.__color)
         self.__text_rect = [self._x + (self._width - self.__text.get_width()) // 2, self._y + (self._height - self.__text.get_height()) // 2, self.__text.get_width(), self.__text.get_height()]
+        self._sound = pygame.mixer.Sound("sounds/button/one_beep-99630.mp3")
 
     def draw(self, screen):
         mouse_pos = pygame.mouse.get_pos()
@@ -26,6 +27,7 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             if self._x <= mouse_pos[0] <= self._x + self._width and self._y <= mouse_pos[1] <= self._y + self._height:
+                pygame.mixer.Sound.play(self._sound)
                 return True
             return False
 
