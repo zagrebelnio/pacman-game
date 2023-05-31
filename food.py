@@ -10,7 +10,6 @@ class Food:
     def getCords(self):
         return self._cords
 
-
     def reset(self, game_field):
         for y in range(game_field.getRows()):
             for x in range(game_field.getCols()):

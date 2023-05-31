@@ -27,8 +27,6 @@ class GameField:
         self.__cols = 21
         self.__grid_size = 30
         self.__background_color = (0, 0, 0)
-        self.__grid_color = (100, 100, 100)
-        self.__wall_color = (0, 0, 204)
         self.__status = "normal"
         self.__vertical_wall = pygame.image.load("images/3_vertical_wall.png")
         self.__horizontal_wall = pygame.image.load("images/4_horizontal_wall.png")

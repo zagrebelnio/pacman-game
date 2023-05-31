@@ -170,16 +170,20 @@ def initialize_game(game_field, screen):
     bonus.reset(game_field)
     block = Block()
     block.reset(game_field)
-    ghost = Ghost(game_field)
-    ghost_guardian = GhostGuardian(game_field)
-    ghost_patrol = GhostPatrol(game_field)
-    ghost_patrol.setPatrolAreaTarget(game_field)
-    ghost_haunter = GhostHaunter(game_field)
+
+    ghosts = []
+    ghost_types = [Ghost, GhostGuardian, GhostPatrol, GhostHaunter]
+    for ghost_type in ghost_types:
+        ghost = ghost_type(game_field)
+        if isinstance(ghost, GhostPatrol):
+            ghost.setPatrolAreaTarget(game_field)
+        ghosts.append(ghost)
+
     door = Door(game_field)
     scorebar = ScoreBar(game_field, screen)
-    return pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, scorebar
+    return pacman, clock, food, bonus, block, ghosts, door, scorebar
 
-def starting_screen(screen, game_field, pacman, food, bonus, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, clock):
+def starting_screen(screen, game_field, pacman, food, bonus, ghosts, door, clock):
     start_time = pygame.time.get_ticks() / 1000
     game_start_sound = pygame.mixer.Sound("sounds/game/game_start.wav")
     game_start_sound.set_volume(0.3)
@@ -193,10 +197,8 @@ def starting_screen(screen, game_field, pacman, food, bonus, ghost, ghost_guardi
         pacman.draw(screen)
         food.draw(screen)
         bonus.draw(screen)
-        ghost.draw(screen, game_field)
-        ghost_guardian.draw(screen, game_field)
-        ghost_patrol.draw(screen, game_field)
-        ghost_haunter.draw(screen, game_field)
+        for ghost in ghosts:
+            ghost.draw(screen, game_field)
         door.draw(screen)
         pygame.display.update()
         pygame.time.delay(max(0, 250 - dt))
@@ -219,25 +221,26 @@ def death_screen(screen, game_field, pacman, ghost, clock):
     clock.tick_busy_loop(250)
 
 def game_loop(game_field, screen):
-    pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, scorebar = initialize_game(game_field, screen)
+    pacman, clock, food, bonus, block, ghosts, door, scorebar = initialize_game(game_field, screen)
     game_field.setStatus("normal")
-    starting_screen(screen, game_field, pacman, food, bonus, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, clock)
+    starting_screen(screen, game_field, pacman, food, bonus, ghosts, door, clock)
     game_over = False
     start_time = pygame.time.get_ticks() / 1000
     bonused_start = None
     game_result = None
     game_start = pygame.time.get_ticks() / 1000
     exit_to_menu = True
-    eating_sound = pygame.mixer.Sound("sounds/game/wakawaka (mp3cut.net).mp3")
-    eating_sound.set_volume(0.1)
-    siren_sound = pygame.mixer.Sound("sounds/game/siren_1.wav")
-    siren_sound.set_volume(0.1)
-    bonus_sound = pygame.mixer.Sound("sounds/game/power_pellet.wav")
-    bonus_sound.set_volume(0.1)
-    ghost_death_sound = pygame.mixer.Sound("sounds/game/eat_ghost.wav")
-    ghost_death_sound.set_volume(0.3)
+    sounds = {
+        "eating": pygame.mixer.Sound("sounds/game/wakawaka (mp3cut.net).mp3"),
+        "siren": pygame.mixer.Sound("sounds/game/siren_1.wav"),
+        "bonus": pygame.mixer.Sound("sounds/game/power_pellet.wav"),
+        "ghost_death": pygame.mixer.Sound("sounds/game/eat_ghost.wav")
+    }
+    for sound in sounds.values():
+        sound.set_volume(0.1)
+    sounds["ghost_death"].set_volume(0.3)
     while not game_over:
-        siren_sound.play(-1)
+        sounds["siren"].play(-1)
         if pygame.time.get_ticks() / 1000 - start_time > 3:
             door.open()
         dt = clock.tick(250)
@@ -268,155 +271,66 @@ def game_loop(game_field, screen):
         food.draw(screen)
         if food.eat(pacman):
             scorebar.increaseScore(1)
-            siren_sound.stop()
-            eating_sound.play(maxtime=450)
+            sounds["siren"].stop()
+            sounds["eating"].play(maxtime=450)
         bonus.draw(screen)
         if bonus.eat(pacman):
             scorebar.increaseScore(10)
-            siren_sound.stop()
-            eating_sound.play(maxtime=450)
+            sounds["siren"].stop()
+            sounds["eating"].play(maxtime=450)
             bonused_start = pygame.time.get_ticks() / 1000
             game_field.setStatus("bonused")
 
         if game_field.getStatus() == "bonused":
-            if ghost.isAlive():
-                ghost.setSpeed(0.08)
-            if ghost_patrol.isAlive():
-                ghost_patrol.setSpeed(0.08)
-            if ghost_guardian.isAlive():
-                ghost_guardian.setSpeed(0.08)
-            if ghost_haunter.isAlive():
-                ghost_haunter.setSpeed(0.08)
+            for ghost in ghosts:
+                if ghost.isAlive():
+                    ghost.setSpeed(0.08)
 
         if bonused_start != None:
-            siren_sound.stop()
-            bonus_sound.play()
+            sounds["siren"].stop()
+            sounds["bonus"].play()
             if pygame.time.get_ticks() / 1000 - bonused_start > 10:
                 game_field.setStatus("normal")
-                if ghost.isAlive():
-                    ghost.setSpeed(0.11)
-                if ghost_patrol.isAlive():
-                    ghost_patrol.setSpeed(0.11)
-                if ghost_guardian.isAlive():
-                    ghost_guardian.setSpeed(0.11)
-                if ghost_haunter.isAlive():
-                    ghost_haunter.setSpeed(0.11)
+                for ghost in ghosts:
+                    if ghost.isAlive():
+                        ghost.setSpeed(0.11)
                 bonused_start = None
         block.check_wall_collisions(pacman)
-        block.check_wall_collisions(ghost)
-        block.check_wall_collisions(ghost_guardian)
-        block.check_wall_collisions(ghost_patrol)
-        block.check_wall_collisions(ghost_haunter)
+        for ghost in ghosts:
+            block.check_wall_collisions(ghost)
         pacman.draw(screen)
         pacman.setCell(game_field)
-        ghost.draw(screen, game_field)
-        ghost.setCell(game_field)
-        ghost.setTarget(pacman)
-        ghost.changeDirection(game_field, door, pacman)
-        ghost.move(dt, screen)
-        ghost_guardian.draw(screen, game_field)
-        ghost_guardian.setCell(game_field)
-        ghost_guardian.setBonusTarget(bonus)
-        ghost_guardian.setTarget(bonus, game_field)
-        ghost_guardian.changeDirection(game_field, door, pacman)
-        ghost_guardian.move(dt, screen)
-        ghost_patrol.draw(screen, game_field)
-        ghost_patrol.setCell(game_field)
-        ghost_patrol.setTarget(game_field)
-        ghost_patrol.changeDirection(game_field, door, pacman)
-        ghost_patrol.move(dt, screen)
-        ghost_haunter.draw(screen, game_field)
-        ghost_haunter.setCell(game_field)
-        ghost_haunter.setTarget(pacman)
-        ghost_haunter.changeDirection(game_field, door, pacman)
-        ghost_haunter.move(dt, screen)
-        if ghost.pacmanCollision(pacman):
-            if game_field.getStatus() == "normal":
-                siren_sound.stop()
-                death_screen(screen, game_field, pacman, ghost, clock)
-                if pacman.getLifes() == 1:
-                    game_over = True
-                    game_result = False
-                start_time = pygame.time.get_ticks() / 1000
-                door.close()
-                pacman.decrementLifes()
-                ghost.reset(game_field)
-                ghost_guardian.reset(game_field)
-                ghost_patrol.reset(game_field)
-                ghost_haunter.reset(game_field)
-                pacman.reset(game_field)
-            elif game_field.getStatus() == "bonused":
-                if ghost.isAlive():
-                    scorebar.increaseScore(100)
-                    bonus_sound.stop()
-                    ghost_death_sound.play()
-                ghost.killed()
-
-        elif ghost_guardian.pacmanCollision(pacman):
-            if game_field.getStatus() == "normal":
-                siren_sound.stop()
-                death_screen(screen, game_field, pacman, ghost_guardian, clock)
-                if pacman.getLifes() == 1:
-                    game_over = True
-                    game_result = False
-                start_time = pygame.time.get_ticks() / 1000
-                door.close()
-                pacman.decrementLifes()
-                ghost.reset(game_field)
-                ghost_guardian.reset(game_field)
-                ghost_patrol.reset(game_field)
-                ghost_haunter.reset(game_field)
-                pacman.reset(game_field)
-            elif game_field.getStatus() == "bonused":
-                if ghost_guardian.isAlive():
-                    scorebar.increaseScore(100)
-                    bonus_sound.stop()
-                    ghost_death_sound.play()
-                ghost_guardian.killed()
-
-        elif ghost_patrol.pacmanCollision(pacman):
-            if game_field.getStatus() == "normal":
-                siren_sound.stop()
-                death_screen(screen, game_field, pacman, ghost_patrol, clock)
-                if pacman.getLifes() == 1:
-                    game_over = True
-                    game_result = False
-                start_time = pygame.time.get_ticks() / 1000
-                door.close()
-                pacman.decrementLifes()
-                ghost.reset(game_field)
-                ghost_guardian.reset(game_field)
-                ghost_patrol.reset(game_field)
-                ghost_haunter.reset(game_field)
-                pacman.reset(game_field)
-            elif game_field.getStatus() == "bonused":
-                if ghost_patrol.isAlive():
-                    scorebar.increaseScore(100)
-                    bonus_sound.stop()
-                    ghost_death_sound.play()
-                ghost_patrol.killed()
-
-        elif ghost_haunter.pacmanCollision(pacman):
-            if game_field.getStatus() == "normal":
-                siren_sound.stop()
-                death_screen(screen, game_field, pacman, ghost_haunter, clock)
-                if pacman.getLifes() == 1:
-                    game_over = True
-                    game_result = False
-                start_time = pygame.time.get_ticks() / 1000
-                door.close()
-                pacman.decrementLifes()
-                ghost.reset(game_field)
-                ghost_guardian.reset(game_field)
-                ghost_patrol.reset(game_field)
-                ghost_haunter.reset(game_field)
-                pacman.reset(game_field)
-            elif game_field.getStatus() == "bonused":
-                if ghost_haunter.isAlive():
-                    scorebar.increaseScore(100)
-                    bonus_sound.stop()
-                    ghost_death_sound.play()
-                ghost_haunter.killed()
+        for ghost in ghosts:
+            ghost.draw(screen, game_field)
+            ghost.setCell(game_field)
+            if isinstance(ghost, GhostGuardian):
+                ghost.setBonusTarget(bonus)
+                ghost.setTarget(bonus, game_field)
+            elif isinstance(ghost, GhostPatrol):
+                ghost.setTarget(game_field)
+            else:
+                ghost.setTarget(pacman)
+            ghost.changeDirection(game_field, door, pacman)
+            ghost.move(dt, screen)
+            if ghost.pacmanCollision(pacman):
+                if game_field.getStatus() == "normal":
+                    sounds["siren"].stop()
+                    death_screen(screen, game_field, pacman, ghost, clock)
+                    if pacman.getLifes() == 1:
+                        game_over = True
+                        game_result = False
+                    start_time = pygame.time.get_ticks() / 1000
+                    door.close()
+                    pacman.decrementLifes()
+                    for ghost in ghosts:
+                        ghost.reset(game_field)
+                    pacman.reset(game_field)
+                elif game_field.getStatus() == "bonused":
+                    if ghost.isAlive():
+                        scorebar.increaseScore(100)
+                        sounds["bonus"].stop()
+                        sounds["ghost_death"].play()
+                    ghost.killed()
 
         if food.getCords() == [] and bonus.getCords() == []:
             game_over = True
@@ -430,10 +344,10 @@ def game_loop(game_field, screen):
         player_lifes = pacman.getLifes()
     game_end = pygame.time.get_ticks() / 1000
     game_time = game_end - game_start
-    siren_sound.stop()
-    bonus_sound.stop()
-    ghost_death_sound.stop()
-    eating_sound.stop()
+    sounds["siren"].stop()
+    sounds["bonus"].stop()
+    sounds["ghost_death"].stop()
+    sounds["eating"].stop()
     return game_result, scorebar.getScore(), game_time, player_lifes, exit_to_menu
 
 def win_screen(screen, score):
