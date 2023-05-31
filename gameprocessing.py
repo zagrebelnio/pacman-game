@@ -7,6 +7,7 @@ from door import *
 from button import *
 from scorebar import *
 from music import *
+from error import *
 
 def show_menu(screen, music, volume_index):
     volume_images = ["images/menu/volume_on.png", "images/menu/volume_off.png"]
@@ -67,13 +68,31 @@ def show_menu(screen, music, volume_index):
 
         pygame.display.update()
 
+def read_score(file_path, screen):
+    scores = []
+    try:
+        if not os.path.exists(file_path):
+            error_message = ["Error in storing the score:", "No file 'scores.txt'", "in 'result' folder!"]
+            raise Error(error_message)
+        with open(file_path, "r") as file:
+            line_num = 1
+            for line in file:
+                score = line.strip()
+                if score.isdigit():
+                    scores.append(score)
+                else:
+                    error_message = ["Error in reading scores:", "The file 'scores.txt' in the", "'result' folder must contain", "only digits!", "The wrong line in the file is:", f"{score}", f"Line number: {line_num}"]
+                    raise Error(error_message)
+                line_num += 1
+        return scores
+    except Error as e:
+        return display_error_message(screen, e.getMessage())
+
 def show_statistics(screen, music, volume_index):
     volume_images = ["images/menu/volume_on.png", "images/menu/volume_off.png"]
-    scores = []
-    with open("result/scores.txt", "r") as file:
-        for line in file:
-            score = line.strip()
-            scores.append(score)
+    scores = read_score("result/scores.txt", screen)
+    if type(scores) is str:
+        return scores, volume_index
     scores.sort(key=int, reverse=True)
     while True:
         screen.fill()
@@ -201,6 +220,7 @@ def death_screen(screen, game_field, pacman, ghost, clock):
 
 def game_loop(game_field, screen):
     pacman, clock, food, bonus, block, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, scorebar = initialize_game(game_field, screen)
+    game_field.setStatus("normal")
     starting_screen(screen, game_field, pacman, food, bonus, ghost, ghost_guardian, ghost_patrol, ghost_haunter, door, clock)
     game_over = False
     start_time = pygame.time.get_ticks() / 1000
@@ -410,6 +430,10 @@ def game_loop(game_field, screen):
         player_lifes = pacman.getLifes()
     game_end = pygame.time.get_ticks() / 1000
     game_time = game_end - game_start
+    siren_sound.stop()
+    bonus_sound.stop()
+    ghost_death_sound.stop()
+    eating_sound.stop()
     return game_result, scorebar.getScore(), game_time, player_lifes, exit_to_menu
 
 def win_screen(screen, score):
@@ -489,6 +513,37 @@ def calculate_total_score(score, game_time, player_lifes):
             time_coef = 480 / game_time
         return int(score * lifes_coefs[player_lifes] * time_coef)
 
-def store_score(score):
-    with open("result/scores.txt", 'a') as file:
-        file.write(str(score) + '\n')
+def store_score(screen, score):
+    score_file = "result/scores.txt"
+    try:
+        if not os.path.exists(score_file):
+            error_message = ["Error in storing the score:", "No file 'scores.txt'", "in 'result' folder!"]
+            raise Error(error_message)
+        with open(score_file, 'a') as file:
+            file.write(str(score) + '\n')
+            return True
+    except Error as e:
+        return display_error_message(screen, e.getMessage())
+
+def display_error_message(screen, message):
+    font = pygame.font.Font("fonts/Pixeboy-z8XGD.ttf", 48)
+    ok_button = Button("OK", screen.getWidth() / 2 - 175, screen.getHeight() - 150)
+
+    while True:
+        screen.fill()
+        top_margin = 150
+        for line in message:
+            error_message = font.render(line, True, "white")
+            error_rect = [(screen.getWidth() - error_message.get_width()) // 2, top_margin, error_message.get_width(), error_message.get_height()]
+            screen.showText(error_message, error_rect)
+            top_margin += 50
+        ok_button.draw(screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "exit"
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if ok_button.checkClick(event):
+                    return "menu"
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                return "menu"
+        pygame.display.update()
