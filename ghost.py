@@ -348,7 +348,6 @@ class GhostPatrol(Ghost):
         self._possible_areas = [[3, 7, 5, 15], [11, 15, 5, 15]]
         self._patrol_area = random.choice(self._possible_areas)
         self._patrol_area_target = []
-        self._path = "images/ghosts_frames"
 
     def _setFrames(self):
         super()._setFrames()
@@ -373,7 +372,7 @@ class GhostPatrol(Ghost):
     def setPatrolAreaTarget(self, game_field):
         target = [random.randint(self._patrol_area[0], self._patrol_area[1]),
                   random.randint(self._patrol_area[2], self._patrol_area[3])]
-        if game_field.getMatrix()[target[0]][target[1]] != 1:
+        if game_field.getMatrix()[target[0]][target[1]] < 3:
             self._patrol_area_target = target
         else:
             self.setPatrolAreaTarget(game_field)

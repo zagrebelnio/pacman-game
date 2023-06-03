@@ -10,7 +10,6 @@ class Pacman:
         self.__direction = "right"
         self.__cell = [int(self.__y // game_field.getGridSize()), int(self.__x // game_field.getGridSize())]
         self.__speed = 0.1
-        self.__color = "yellow"
         self.__lifes = 3
         self.__frames = []
         for file_name in os.listdir("images/pacman_frames"):

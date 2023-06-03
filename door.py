@@ -8,7 +8,6 @@ class Door:
         self.__status = "closed"
         self.__x = self.__cell[1] * game_field.getGridSize() + game_field.getGridSize() / 2
         self.__y = self.__cell[0] * game_field.getGridSize() + game_field.getGridSize() / 2
-        self.__color = "purple"
         self.__image = pygame.image.load("images/2_door.png")
 
     def getStatus(self):

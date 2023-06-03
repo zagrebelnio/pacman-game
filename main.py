@@ -1,46 +1,38 @@
 from gameprocessing import *
-from gamefield import *
-from screen import *
 import pygame
 
 pygame.init()
 
-game_field = GameField()
-screen = Screen(game_field)
+game = Game()
 pygame.display.set_caption("Pacman")
 pygame.display.set_icon(pygame.image.load("images/pac-man-icon-8.jpg"))
 
 application_is_on = True
 
-music = Music()
-music.playMenu()
-volume_index = 0
+menu = Menu(game.getScreen())
 
 while application_is_on:
-    menu_decision, volume_index = show_menu(screen, music, volume_index)
-    if menu_decision == "exit":
+    menu.show_menu(game.getScreen())
+    if menu.getStatus() == "exit":
         application_is_on = False
-    elif menu_decision == "statistics":
-        menu_decision,  volume_index = show_statistics(screen, music, volume_index)
-        if menu_decision == "exit":
+    elif menu.getStatus() == "statistics":
+        menu.showStatistics(game.getScreen())
+        if menu.getStatus() == "exit":
             application_is_on = False
-    elif menu_decision == "start":
-        music.menuStop()
-        game_result, score, game_time, player_lifes, exit_to_menu = game_loop(game_field, screen)
+    elif menu.getStatus() == "start":
+        game_result, score, game_time, player_lifes, exit_to_menu = game.game_loop()
         if game_result is True:
-            score = calculate_total_score(score, game_time, player_lifes)
-            menu_decision = store_score(screen, score)
+            menu_decision = menu.show_score(game.getScreen(), score, game_time, player_lifes)
             if menu_decision == True:
-                win_screen(screen, score)
+                menu.win_screen(game.getScreen(), menu.getScore())
         elif game_result is False:
-            score = calculate_total_score(score, game_time, player_lifes)
-            menu_decision = store_score(screen, score)
+            menu_decision = menu.show_score(game.getScreen(), score, game_time, player_lifes)
             if menu_decision == True:
-                lose_screen(screen, score)
+                menu.lose_screen(game.getScreen(), menu.getScore())
         elif game_result is None and exit_to_menu is False:
             application_is_on = False
-        if menu_decision == "exit":
+        if menu.getStatus() == "exit":
             application_is_on = False
-        music.playMenu()
+        menu.playMusic()
 
 pygame.quit()
