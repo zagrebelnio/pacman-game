@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Reviewed code.">
+    <list default="true" id="c4898ccb-85d9-49e3-9df8-4d4ac56ae7f6" name="Changes" comment="Restructured game processing functions into classes.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/block.py" beforeDir="false" afterPath="$PROJECT_DIR$/block.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/door.py" beforeDir="false" afterPath="$PROJECT_DIR$/door.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gamefield.py" beforeDir="false" afterPath="$PROJECT_DIR$/gamefield.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gameprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/gameprocessing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.pyz" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/PYZ-00.pyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/main.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/build/main/main.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dist/main.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.exe" beforeDir="false" afterPath="$PROJECT_DIR$/main.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pacman.py" beforeDir="false" afterPath="$PROJECT_DIR$/pacman.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/result/scores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/result/scores.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/screen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Розділи курсової/Курсова.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Розділи курсової/Курсова.docx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +128,7 @@
       <workItem from="1685548946328" duration="707000" />
       <workItem from="1685606897719" duration="15609000" />
       <workItem from="1685718511575" duration="10272000" />
-      <workItem from="1685773436975" duration="3071000" />
+      <workItem from="1685773436975" duration="17189000" />
     </task>
     <task id="LOCAL-00001" summary="Added Pacman, player movement and wall collisions.">
       <created>1684178755102</created>
@@ -297,7 +298,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685538924223</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Restructured game processing functions into classes.">
+      <created>1685779837400</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1685779837400</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -339,7 +347,8 @@
     <MESSAGE value="Completed all game sounds and added results screen music." />
     <MESSAGE value="Fixed siren sound bug in menu, added scores file validation." />
     <MESSAGE value="Reviewed code." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reviewed code." />
+    <MESSAGE value="Restructured game processing functions into classes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Restructured game processing functions into classes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -353,6 +362,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685779556997" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pacman_game$main.coverage" NAME="main Coverage Results" MODIFIED="1685823863018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
